@@ -1,4 +1,4 @@
-import random
+from random import sample
 
 class Card:
     def __init__(self, value, suit = ["spades", "hearts", "diamonds", "clubs", "Big", "Little"]):
@@ -48,7 +48,7 @@ class Deck:
         self.cards[52] = Card(0, "Little")
         self.cards[53] = Card(0, "Big")
     def shuffle(self):
-        idx = random.sample(range(54), 54)
+        idx = sample(range(54), 54)
         self.cards = [ self.cards[i] for i in idx ]
     def show(self):
         for crd in self.cards:

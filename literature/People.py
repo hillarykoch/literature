@@ -1,6 +1,9 @@
+from .Cards import Card
+
 class Player:
     def __init__(self, name, team_number, player_number, CPU = False):
         self.name = name
+        self.hand = [None] * 9
         self.CPU_status = CPU
         if team_number in [1, 2]:
             self.team_number = team_number
@@ -20,6 +23,16 @@ class Player:
             else:
                 print("There can only be player numbers 1, 2, and 3.")
                 raise ValueError
+    def has_card(self, card):
+        if isinstance(card, Card):
+            if card.get_card_name() in [ crd.get_card_name() for crd in self.hand ]:
+                return True
+            else:
+                return False
+        else:
+            print('card must be a Card.')
+            raise ValueError
+
 
 class Team:
     def __init__(self, team_name, team_number):
