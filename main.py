@@ -25,3 +25,6 @@ p3.position
 team.show_roster()
 team.add_teammate(p3)
 team.show_roster()
+
+
+

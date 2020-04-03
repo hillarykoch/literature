@@ -32,3 +32,16 @@ class Card:
             return "King of " + self.suit
         else:
             return str(self.value) + " of " + self.suit
+
+class Deck:
+    def __init__(self):
+        self.cards = [None] * 54
+        self.generate()
+    def generate(self):
+        counter = 0
+        for s in ["spades", "hearts", "diamonds", "clubs"]:
+            for v in range(1,14,1):
+                self.cards[counter] = Card(v, s)
+                counter += 1 
+        self.cards[52] = Card(0, "Little")
+        self.cards[53] = Card(0, "Big")
