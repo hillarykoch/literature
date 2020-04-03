@@ -1,3 +1,5 @@
+import random
+
 class Card:
     def __init__(self, value, suit = ["spades", "hearts", "diamonds", "clubs", "Big", "Little"]):
         if value in range(0,14,1): # 0 = Joker, 
@@ -45,3 +47,9 @@ class Deck:
                 counter += 1 
         self.cards[52] = Card(0, "Little")
         self.cards[53] = Card(0, "Big")
+    def shuffle(self):
+        idx = random.sample(range(54), 54)
+        self.cards = [ self.cards[i] for i in idx ]
+    def show(self):
+        for crd in self.cards:
+            print(crd.get_card_name())
