@@ -63,7 +63,8 @@ class Hand:
     def __init__(self):
         self.cards = [ ]
     def show(self):
-        [ c.get_card_name() for c in self.cards ]
+        for c in self.cards:
+            print(c.get_card_name())
     def add_card(self, card):
         if isinstance(card, Card):
             self.cards.append(card)
@@ -105,7 +106,7 @@ class Hand:
         vals = [ c.get_value_rank() for c in self.cards ]
 
         # Sort cards by value within suit
-        [  c for _,_,c in sorted(zip(ranks, vals, self.cards), key=lambda x: (x[0], x[1])) ]
+        self.cards = [  c for _,_,c in sorted(zip(ranks, vals, self.cards), key=lambda x: (x[0], x[1])) ]
         ### currently doesnt address 8/joker sorting I don't think ###            
 
 

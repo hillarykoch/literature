@@ -14,9 +14,13 @@ class Literature:
         self.deal()
 
     def deal(self):
+        counter = 0
         for tm in self.teams:
             for plr in tm.roster:
-                plr.hand = self.deck.cards[plr.position::Literature.NUM_PLAYERS]
+                for i in range(counter, counter + 9):
+                    plr.hand.add_card(self.deck.cards[i])
+                counter += 9
+                #plr.hand = self.deck.cards[plr.position::Literature.NUM_PLAYERS]
 
         # make sure this worked...
         self.check_hands()
@@ -60,7 +64,8 @@ class Literature:
         all_cards = []
         for tm in self.teams:
             for plr in tm.roster:
-                all_cards += plr.hand
+                for c in plr.hand.cards:
+                    all_cards.append(c)
 
         # a set can only have one of each item.  Would be shorter than the list if any dups
         if len(all_cards) != len(set(all_cards)):

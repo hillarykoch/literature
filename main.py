@@ -26,9 +26,10 @@ team2.add_teammate(p6)
 team2.show_roster()
 
 game = Literature(team1, team2)
-game.play_game()
+#game.play_game()
 
+[ c.get_card_name() for c in p1.hand.cards ]
+isinstance(p1.hand, Hand)
 p1.hand.show()
 
-game = Literature(team1, team2)
 
