@@ -42,20 +42,24 @@ class Card:
 class Hand:
     def __init__(self):
         self.cards = [None] * 9
+
     def show(self):
         [ crd.get_card_name() for crd in self.cards ]
+
     def add_card(self, card):
         if isinstance(card, Card):
             self.cards.append(card)
         else:
             print('card must be a Card.')
             raise ValueError
+
     def remove_card(self, card):
         if isinstance(card, Card):
             self.cards.remove(card)
         else:
             print('card must be a Card.')
             raise ValueError
+
     def contains_card(self, card):
         if isinstance(card, Card):
             if card.get_card_name() in [ crd.get_card_name() for crd in self.cards ]:
@@ -65,6 +69,7 @@ class Hand:
         else:
             print('card must be a Card.')
             raise ValueError
+
     def contains_rng(self, card):
         if card.rng == 'eights_and_jokers':
             if 'eights_and_jokers' in [ crd.rng for crd in self.cards ]:
@@ -77,7 +82,7 @@ class Hand:
                 return True
             else:
                 return False
-    # need to and something to sort cards 
+    # need to and something to sort cards  <-- I think this would be a "Player" thing
 
 class Deck:
     def __init__(self):

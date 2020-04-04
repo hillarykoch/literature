@@ -32,7 +32,7 @@ class Literature:
         return players
 
     def query_player(self, player):
-        print("")
+        pass
 
     def take_turn(self, player):
         print(f"{player.name}'s turn")
