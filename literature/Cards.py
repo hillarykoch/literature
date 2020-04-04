@@ -35,6 +35,44 @@ class Card:
         else:
             return str(self.value) + " of " + self.suit
 
+class Hand:
+    def __init__(self):
+        self.cards = [None] * 9
+    def show():
+        [ crd.get_card_name() for crd in self.cards ]
+    def add_card(self, card):
+        if isinstance(card, Card):
+            self.cards.append(card)
+        else:
+            print('card must be a Card.')
+            raise ValueError
+    def remove_card(self, card):
+        if isinstance(card, Card):
+            self.cards.remove(card)
+        else:
+            print('card must be a Card.')
+            raise ValueError
+    def contains_card(self, card):
+        if isinstance(card, Card):
+            if card.get_card_name() in [ crd.get_card_name() for crd in self.cards ]:
+                return True
+            else:
+                return False
+        else:
+            print('card must be a Card.')
+            raise ValueError
+    def contains_rng(self, card):
+        if card.rng == 'eights_and_jokers':
+            if 'eights_and_jokers' in [ crd.rng for crd in self.cards ]:
+                return True
+            else:
+                return False
+        else:
+            if any(([  card.rng in crd.rng for crd in self.cards ]) and ([ card.suit in crd.suit for crd in self.cards ])):
+                return True
+            else:
+                return False
+
 class Deck:
     def __init__(self):
         self.cards = [None] * 54

@@ -4,7 +4,7 @@ from random import sample
 class Player:
     def __init__(self, name, team_number, player_number, CPU = False):
         self.name = name
-        self.hand = []
+        self.hand = Hand()
         self.CPU_status = CPU
         self.deny_phrases = ['Nice try!', 'I don\'t think so!', 'Noooope.', 'Go feesh!', 'You asked me that last time.']
         self.hand_over_phrases = ['Yeah....', '*Heavy sigh*', 'You\'re cheating!', 'How did you know?', 'Ok but I\'m gonna get you back, you little stinker....you just wait.']
@@ -27,40 +27,16 @@ class Player:
             else:
                 print("There can only be player numbers 1, 2, and 3.")
                 raise ValueError
-    def show_hand(self):
-        [ crd.get_card_name() for crd in self.hand ]
-    def add_card(self, card):
-        if isinstance(card, Card):
-            self.hand.append(card)
-        else:
-            print('card must be a Card.')
-            raise ValueError
     def hand_over_card(self, card):
         if isinstance(card, Card):            
-            self.hand.remove(card)
+            self.hand.remove_card(card)
         else:
             print('card must be a Card.')
             raise ValueError
     def has_card(self, card):
-        if isinstance(card, Card):
-            if card.get_card_name() in [ crd.get_card_name() for crd in self.hand ]:
-                return True
-            else:
-                return False
-        else:
-            print('card must be a Card.')
-            raise ValueError
+        return self.hand.contains_card(card)
     def has_rng(self, card):
-        if card.rng == 'eights_and_jokers':
-            if 'eights_and_jokers' in [ crd.rng for crd in self.hand ]:
-                return True
-            else:
-                return False
-        else:
-            if any(([  card.rng in crd.rng for crd in self.hand ]) and ([ card.suit in crd.suit for crd in self.hand ])):
-                return True
-            else:
-                return False
+        return self.hand.contains_rng(card)
     def ask_for_card(self, opponent, card):
         if opponent.team_number == self.team_number:
             print("You can't ask your own team member for a card.")
