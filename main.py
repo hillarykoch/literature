@@ -28,6 +28,7 @@ team2.show_roster()
 game = Literature(team1, team2)
 game.check_hands()
 
+p1.hand.show()
 
-isinstance(p1.hand, Hand)
-isinstance(p1.hand, Hand)
+game = Literature(team1, team2)
+
