@@ -1,6 +1,6 @@
 from literature.game.cards import Card, Hand
 
-from literature.input_getters.console_input import ConsoleInput 
+from literature.comms.console_comms import ConsoleComms 
 
 # external
 from random import sample
@@ -10,13 +10,13 @@ from random import sample
 class Player:
     def __init__(self, name, team_number, 
             player_number, 
-            input_getter = ConsoleInput(),
+            comms = ConsoleComms(),
             CPU = False):
         self.name = name
         self.hand = Hand()
 
-        self.input_getter   = input_getter
-        self.CPU_status     = CPU
+        self.comms      = comms
+        self.CPU_status = CPU
 
         self.deny_phrases = ['Nice try!', 
                 'I don\'t think so!', 
@@ -53,7 +53,7 @@ class Player:
         self.position = self.player_number * 2 - 3 + self.team_number
 
     def get_input(self):
-        return self.input_getter.get_input()
+        return self.comms.get_data()
 
     def change_player_number(self, new_number):
             if new_number in [1, 2, 3]:
