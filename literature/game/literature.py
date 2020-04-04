@@ -35,8 +35,16 @@ class Literature:
 
         return players
 
+    def query_player(self, player):
+        print("")
+
     def take_turn(self, player):
         print(f"{player.name}'s turn")
+
+        print("\tAsking player what they want to do")
+        self.query_player(player)
+
+        print(f"\tGetting input: {player.get_input()}")
 
 
     def play_game(self):
@@ -59,8 +67,6 @@ class Literature:
 
 ################### HELPERS ####################
     def check_hands(self):
-        print("Checking hands after deal")
-
         all_cards = []
         for tm in self.teams:
             for plr in tm.roster:
