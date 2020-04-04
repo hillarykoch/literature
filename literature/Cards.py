@@ -2,6 +2,7 @@ from random import sample
 
 class Card:
     def __init__(self, value, suit = ["spades", "hearts", "diamonds", "clubs", "Big", "Little"]):
+        suit_dict = {"clubs": 1, "diamonds": 2, "spades": 3, "hearts": 4}
         if value in range(0,14,1): # 0 = Joker, 11-13 = jack, queen, king
             self.value = value
         else:
@@ -42,7 +43,10 @@ class Card:
         else:
             return self.value
     def get_suit_rank(self): # rank suits as 1. eights_and_jokers 2. clubs 3. diamonds 4. spades 5. hearts
-        # return something
+        if self.rng == 'eights_and_jokers':
+            return 0
+        else:
+            return suit_dict[self.suit]
 
 class Hand:
     def __init__(self):
