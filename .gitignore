@@ -1,3 +1,6 @@
 *.pyc
 .envrc
 .direnv/*
+literature.code-workspace
+__pycache__
+__pycache__/*
