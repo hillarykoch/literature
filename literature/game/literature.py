@@ -33,6 +33,7 @@ class Literature:
 
     def take_turn(self, player):
         print(f"{player.name}'s turn")
+        print(f"\tGetting input: {player.get_input()}")
 
 
     def play_game(self):
