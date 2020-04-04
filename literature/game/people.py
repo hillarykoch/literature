@@ -64,7 +64,7 @@ class Player:
                 raise ValueError
 
     def still_playing(self):
-        return len(self.hand) > 0
+        return len(self.hand.cards) > 0
 
     def hand_over_card(self, card):
         if isinstance(card, Card):            
@@ -75,6 +75,7 @@ class Player:
 
     def has_card(self, card):
         return self.hand.contains_card(card)
+        
     def has_rng(self, card):
         return self.hand.contains_rng(card)
 

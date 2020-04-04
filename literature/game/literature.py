@@ -19,8 +19,8 @@ class Literature:
             for plr in tm.roster:
                 for i in range(counter, counter + 9):
                     plr.hand.add_card(self.deck.cards[i])
+                plr.hand.sort()
                 counter += 9
-                #plr.hand = self.deck.cards[plr.position::Literature.NUM_PLAYERS]
 
         # make sure this worked...
         self.check_hands()

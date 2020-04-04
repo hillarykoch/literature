@@ -3,7 +3,7 @@ from random import sample
 
 class Card:
     def __init__(self, value, suit = ["spades", "hearts", "diamonds", "clubs", "Big", "Little"]):
-        SUIT_DICT = {"clubs": 1, "diamonds": 2, "spades": 3, "hearts": 4}
+        self.SUIT_DICT = {"clubs": 1, "diamonds": 2, "spades": 3, "hearts": 4}
         if value in range(0,14,1): # 0 = Joker, 11-13 = jack, queen, king
             self.value = value
         else:
@@ -55,8 +55,8 @@ class Card:
         if self.rng == 'eights_and_jokers':
             return 0
         else:
-            return SUIT_DICT[self.suit]    
-        
+            return self.SUIT_DICT[self.suit]    
+
     
 
 class Hand:
@@ -105,7 +105,7 @@ class Hand:
         # Get card rankings by value
         vals = [ c.get_value_rank() for c in self.cards ]
 
-        # Sort cards by value within suit
+        # multisort cards first by by suit then by value
         self.cards = [  c for _,_,c in sorted(zip(ranks, vals, self.cards), key=lambda x: (x[0], x[1])) ]
         ### currently doesnt address 8/joker sorting I don't think ###            
 
