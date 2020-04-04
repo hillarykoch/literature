@@ -14,13 +14,9 @@ class Literature:
         self.deal()
 
     def deal(self):
-        counter = 0
         for tm in self.teams:
             for plr in tm.roster:
-                for i in range(counter, counter + 9):
-                    plr.hand.add_card(self.deck.cards[i])
-                plr.hand.sort()
-                counter += 9
+                plr.hand.cards = self.deck.cards[plr.position::Literature.NUM_PLAYERS]
 
         # make sure this worked...
         self.check_hands()
@@ -36,7 +32,7 @@ class Literature:
         return players
 
     def query_player(self, player):
-        print("")
+        pass
 
     def take_turn(self, player):
         print(f"{player.name}'s turn")

@@ -62,21 +62,25 @@ class Card:
 class Hand:
     def __init__(self):
         self.cards = [ ]
+
     def show(self):
         for c in self.cards:
             print(c.get_card_name())
+
     def add_card(self, card):
         if isinstance(card, Card):
             self.cards.append(card)
         else:
             print('card must be a Card.')
             raise ValueError
+
     def remove_card(self, card):
         if isinstance(card, Card):
             self.cards.remove(card)
         else:
             print('card must be a Card.')
             raise ValueError
+
     def contains_card(self, card):
         if isinstance(card, Card):
             if card.get_card_name() in [ c.get_card_name() for c in self.cards ]:
@@ -86,6 +90,7 @@ class Hand:
         else:
             print('card must be a Card.')
             raise ValueError
+
     def contains_rng(self, card):
         if card.rng == 'eights_and_jokers':
             if 'eights_and_jokers' in [ c.rng for c in self.cards ]:
@@ -98,6 +103,8 @@ class Hand:
                 return True
             else:
                 return False
+
+    # I think this might be a "Player" thing
     def sort(self):
         # Get card rankings by suit
         ranks = [ c.get_suit_rank() for c in self.cards ]
@@ -108,7 +115,6 @@ class Hand:
         # multisort cards first by by suit then by value
         self.cards = [  c for _,_,c in sorted(zip(ranks, vals, self.cards), key=lambda x: (x[0], x[1])) ]
         ### currently doesnt address 8/joker sorting I don't think ###            
-
 
 class Deck:
     def __init__(self):
