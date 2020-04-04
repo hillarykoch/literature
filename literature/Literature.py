@@ -6,6 +6,7 @@ class Literature:
         self.deck = Deck()
         self.deck.shuffle()
         self.deal(team1, team2)
+
     def deal(self, team1, team2):
         counter = 0
         for tm in [team1, team2]:

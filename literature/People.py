@@ -8,9 +8,27 @@ class Player:
         self.name = name
         self.hand = Hand()
         self.CPU_status = CPU
-        self.deny_phrases = ['Nice try!', 'I don\'t think so!', 'Noooope.', 'Go feesh!', 'You asked me that last time.']
-        self.hand_over_phrases = ['Yeah....', '*Heavy sigh*', 'You\'re cheating!', 'How did you know?', 'Ok but I\'m gonna get you back, you little stinker....you just wait.']
-        self.proclamations = ['Yeet', 'Scooooooop!', 'OFY', 'We\'re on a roll, baby.']
+
+        self.deny_phrases = ['Nice try!', 
+                'I don\'t think so!', 
+                'Noooope.', 
+                'Go feesh!', 
+                'You asked me that last time.'
+            ]
+
+        self.hand_over_phrases = ['Yeah....', 
+                '*Heavy sigh*', 
+                'You\'re cheating!', 
+                'How did you know?', 
+                'Ok but I\'m gonna get you back, you little stinker....you just wait.'
+            ]
+
+        self.proclamations = ['Yeet', 
+                'Scooooooop!', 
+                'OFY', 
+                'We\'re on a roll, baby.'
+            ]
+
         if team_number in [1, 2]:
             self.team_number = team_number
         else:
@@ -65,13 +83,16 @@ class Team:
         self.team_name = team_name
         self.total_teammates = 0
         self.roster = [None] * 3
+
         if team_number in [1, 2]:
             self.team_number = team_number
         else:
             print("There can only be Team 1 and Team 2.")
             raise ValueError
+
     def show_roster(self):
         [ print(plr.name) for plr in self.roster ]
+
     def add_teammate(self, player):
         if isinstance(player, Player):
             if self.total_teammates < 3:

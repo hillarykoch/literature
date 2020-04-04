@@ -68,7 +68,8 @@ class Hand:
             else:
                 return False
         else:
-            if any(([  card.rng in crd.rng for crd in self.cards ]) and ([ card.suit in crd.suit for crd in self.cards ])):
+            if any(([card.rng in crd.rng for crd in self.cards]) and 
+                    ([card.suit in crd.suit for crd in self.cards])):
                 return True
             else:
                 return False
@@ -78,6 +79,7 @@ class Deck:
     def __init__(self):
         self.cards = [None] * 54
         self.generate()
+
     def generate(self):
         counter = 0
         for s in ["spades", "hearts", "diamonds", "clubs"]:
@@ -86,9 +88,11 @@ class Deck:
                 counter += 1 
         self.cards[52] = Card(0, "Little")
         self.cards[53] = Card(0, "Big")
+
     def shuffle(self):
         idx = sample(range(54), 54)
         self.cards = [ self.cards[i] for i in idx ]
+
     def show(self):
         for crd in self.cards:
             print(crd.get_card_name())
