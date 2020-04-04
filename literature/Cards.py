@@ -2,7 +2,7 @@ from random import sample
 
 class Card:
     def __init__(self, value, suit = ["spades", "hearts", "diamonds", "clubs", "Big", "Little"]):
-        if value in range(0,14,1): # 0 = Joker, 
+        if value in range(0,14,1): # 0 = Joker, 11-13 = jack, queen, king
             self.value = value
         else:
             print('Cards must be Ace through King or Joker (passed value not in range(0,14,1)).')
@@ -34,6 +34,15 @@ class Card:
             return "King of " + self.suit
         else:
             return str(self.value) + " of " + self.suit
+    def get_value_rank(self): # for sorting
+        if self.value == 1: # Ace high
+            return 14
+        elif self.value == 8: # Eights before jokers
+            return -1
+        else:
+            return self.value
+    def get_suit_rank(self): # rank suits as 1. eights_and_jokers 2. clubs 3. diamonds 4. spades 5. hearts
+        # return something
 
 class Hand:
     def __init__(self):
