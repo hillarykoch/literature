@@ -1,6 +1,8 @@
-from .Cards import Card
+from .Cards import Card, Hand
 from random import sample
 
+# I don't think I will need team_number and player_number to be passed
+#   but will probably need to assign them
 class Player:
     def __init__(self, name, team_number, player_number, CPU = False):
         self.name = name
@@ -51,9 +53,9 @@ class Player:
             print(self.name + ' asks ' + opponent.name + ', \'Do you have the ' + card.get_card_name() + '?')
             if opponent.has_card(card):
                 print(opponent.name + ' says \'' + sample(self.hand_over_phrases, 1)[0] + '\'')
-                print(self.name + ' says \'' + sample(self.proclamations, 1)[0], + '\'')
+                print(self.name + ' says \'' + sample(self.proclamations, 1)[0] + '\'')
                 opponent.hand_over_card(card)
-                self.add_card(card)
+                self.hand.add_card(card)
             else:
                 print(opponent.name + ' says \'' + sample(self.deny_phrases, 1)[0] +'\'')
 
@@ -62,23 +64,22 @@ class Team:
     def __init__(self, team_name, team_number):
         self.team_name = team_name
         self.total_teammates = 0
-        self.roster = {}
+        self.roster = [None] * 3
         if team_number in [1, 2]:
             self.team_number = team_number
         else:
             print("There can only be Team 1 and Team 2.")
             raise ValueError
     def show_roster(self):
-        return self.roster
+        [ print(plr.name) for plr in self.roster ]
     def add_teammate(self, player):
         if isinstance(player, Player):
-            if self.show_roster().get(player.position) is None:
-                self.roster[player.position] = player.name
+            if self.total_teammates < 3:
+                self.roster[self.total_teammates] = player
+                self.total_teammates += 1
             else:
-                print('Position ' + str(player.position) + ' is already taken!')
+                print(self.team_name + ' is already full!')
                 raise ValueError
-        if self.total_teammates < 3:
-            self.total_teammates += 1
         else:
-            print('Team ' + str(self.team_number) + ' is full!')
+            print('player must be of class Player.')
             raise ValueError

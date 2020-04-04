@@ -1,36 +1,31 @@
 import literature
 from literature.Cards import *
 from literature.People import *
+from literature.Game import *
+
+team1 = Team('Planet Express Crew', 1)
+team2 = Team('City of Townsville Chaos Squad', 2)
+
+p1 = Player('Leela', 1, 1)
+p2 = Player('Zoidberg', 1, 2)
+p3 = Player('Philip J. Fry', 1, 3)
+
+p4 = Player('Mojo Jojo', 2, 1)
+p5 = Player('Him', 2, 2)
+p6 = Player('Fuzzy Lumpkins', 2, 3)
+
+team1.add_teammate(p1)
+team1.add_teammate(p2)
+team1.add_teammate(p3)
+team1.show_roster()
+
+team2.add_teammate(p4)
+team2.add_teammate(p5)
+team2.add_teammate(p6)
+team2.show_roster()
+
+game = Literature(team1, team2)
 
 
-ljoker = Card(0, "Little")
-ljoker.rng
-
-
-p1 = Player('Hillary Clinton', 1, 1)
-p2 = Player('Zoidberg', 2, 2)
-p3 = Player('Meryl Streep', 1, 3)
-
-team = Team('Fungus', 1)
-team2 = Team('Marge', 2)
-
-team.show_roster()
-team.add_teammate(p1)
-team2.add_teammate(p2)
-team.add_teammate(p3)
-
-
-deck = Deck()
-deck.show()
-deck.shuffle()
-deck.show()
-
-p1.add_card(ljoker)
-p1.add_card(Card(5, "spades"))
-p1.add_card(Card(13, "hearts"))
-p1.has_card(ljoker)
-p1.has_card(Card(7,"clubs"))
-
-p2.add_card(Card(4, "spades"))
-p2.ask_for_card(p1, Card(5, "spades"))
-p2.hand
+isinstance(p1.hand, Hand)
+isinstance(p1.hand, Hand)

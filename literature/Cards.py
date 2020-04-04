@@ -38,7 +38,7 @@ class Card:
 class Hand:
     def __init__(self):
         self.cards = [None] * 9
-    def show():
+    def show(self):
         [ crd.get_card_name() for crd in self.cards ]
     def add_card(self, card):
         if isinstance(card, Card):
@@ -72,6 +72,7 @@ class Hand:
                 return True
             else:
                 return False
+    # need to and something to sort cards 
 
 class Deck:
     def __init__(self):
