@@ -61,18 +61,12 @@ class Card:
 
 class Hand:
     def __init__(self):
-<<<<<<< HEAD
-        self.cards = [None] * 9
-
-    def show(self):
-        [ crd.get_card_name() for crd in self.cards ]
-
-=======
         self.cards = [ ]
+
     def show(self):
         for c in self.cards:
             print(c.get_card_name())
->>>>>>> 16bdf3389afda20cf3881a52d951a24b478ffc38
+
     def add_card(self, card):
         if isinstance(card, Card):
             self.cards.append(card)
