@@ -1,7 +1,7 @@
 import literature
 from literature.Cards import *
 from literature.People import *
-from literature.Game import *
+#from literature.Literature import *
 
 team1 = Team('Planet Express Crew', 1)
 team2 = Team('City of Townsville Chaos Squad', 2)
@@ -24,8 +24,15 @@ team2.add_teammate(p5)
 team2.add_teammate(p6)
 team2.show_roster()
 
+deck = Deck()
+deck.shuffle()
+deck.show()
+
+p1.hand.show()
+for c in deck.cards:
+    p1.hand.add_card(c)
+
+p1.hand.show()
+
 game = Literature(team1, team2)
 
-
-isinstance(p1.hand, Hand)
-isinstance(p1.hand, Hand)
