@@ -34,12 +34,15 @@ class Player:
         else:
             print("There can only be Team 1 and Team 2.")
             raise ValueError
+
         if player_number in [1, 2, 3]:
             self.player_number = player_number
         else:
             print("There can only be player numbers 1, 2, and 3.")
             raise ValueError
+
         self.position = self.player_number * 2 - 3 + self.team_number
+
     def change_player_number(self, new_number):
             if new_number in [1, 2, 3]:
                 self.player_number = new_number
@@ -47,16 +50,19 @@ class Player:
             else:
                 print("There can only be player numbers 1, 2, and 3.")
                 raise ValueError
+
     def hand_over_card(self, card):
         if isinstance(card, Card):            
             self.hand.remove_card(card)
         else:
             print('card must be a Card.')
             raise ValueError
+
     def has_card(self, card):
         return self.hand.contains_card(card)
     def has_rng(self, card):
         return self.hand.contains_rng(card)
+
     def ask_for_card(self, opponent, card):
         if opponent.team_number == self.team_number:
             print("You can't ask your own team member for a card.")

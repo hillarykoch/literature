@@ -1,7 +1,8 @@
 import literature
-from literature.Cards import *
+
 from literature.People import *
-from literature.Game import *
+from literature.Cards import *
+from literature.Literature import *
 
 team1 = Team('Planet Express Crew', 1)
 team2 = Team('City of Townsville Chaos Squad', 2)
@@ -25,6 +26,7 @@ team2.add_teammate(p6)
 team2.show_roster()
 
 game = Literature(team1, team2)
+game.check_hands()
 
 
 isinstance(p1.hand, Hand)

@@ -7,12 +7,14 @@ class Card:
         else:
             print('Cards must be Ace through King or Joker (passed value not in range(0,14,1)).')
             raise ValueError
+
         if value in range(2,8,1):
             self.rng = "low"
         elif value in ([1] + list(range(9,14,1))):
             self.rng = "high"
         else:
             self.rng = "eights_and_jokers"
+
         if (self.value != 0) and (suit in ["Big", "Little"]):
             print("Only a Joker can have suit \'Big Joker\' or \'Little Joker\'")
             raise ValueError
@@ -21,6 +23,7 @@ class Card:
             raise ValueError
         else:
             self.suit = suit
+
     def get_card_name(self):
         if self.value == 0:
             return self.suit + " Joker"
