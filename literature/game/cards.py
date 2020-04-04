@@ -1,3 +1,4 @@
+# external
 from random import sample
 
 class Card:

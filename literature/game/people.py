@@ -1,10 +1,14 @@
-from .Cards import Card, Hand
+from literature.game.cards import Card, Hand
+
+# external
 from random import sample
 
 # I don't think I will need team_number and player_number to be passed
 #   but will probably need to assign them
 class Player:
-    def __init__(self, name, team_number, player_number, CPU = False):
+    def __init__(self, name, team_number, 
+            player_number, 
+            CPU = False):
         self.name = name
         self.hand = Hand()
         self.CPU_status = CPU
@@ -50,6 +54,9 @@ class Player:
             else:
                 print("There can only be player numbers 1, 2, and 3.")
                 raise ValueError
+
+    def still_playing(self):
+        return len(self.hand) > 0
 
     def hand_over_card(self, card):
         if isinstance(card, Card):            
