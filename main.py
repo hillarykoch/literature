@@ -26,7 +26,7 @@ team2.add_teammate(p6)
 team2.show_roster()
 
 game = Literature(team1, team2)
-game.check_hands()
+game.play_game()
 
 
 isinstance(p1.hand, Hand)
