@@ -1,5 +1,5 @@
-from .Cards import Deck, Hand
-from .People import Team
+from literature.game.cards import Deck, Hand
+from literature.game.people import Team
 
 class Literature:
     NUM_PLAYERS = 6

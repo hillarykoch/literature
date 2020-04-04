@@ -1,8 +1,8 @@
-import literature
+# could import *, but explicit better than implicit
 
-from literature.People import *
-from literature.Cards import *
-from literature.Literature import *
+from literature.game.people import Player, Team
+from literature.game.cards import Card, Deck, Hand
+from literature.game.literature import Literature # should fix this naming
 
 team1 = Team('Planet Express Crew', 1)
 team2 = Team('City of Townsville Chaos Squad', 2)

@@ -1,4 +1,6 @@
-from .Cards import Card, Hand
+from literature.game.cards import Card, Hand
+
+# external
 from random import sample
 
 # I don't think I will need team_number and player_number to be passed
