@@ -15,6 +15,12 @@ class Player:
         self.name = name
         self.hand = Hand()
 
+        """ For tracking if a player is still playing.
+            Set this to True at the start of a turn so that a Player may take multiple guesses.
+            Set it to False if the player fails to obtain a card to stop the turn.
+        """  
+        self.guessed_correctly = False
+
         self.comms      = comms
         self.CPU_status = CPU
 
@@ -64,7 +70,7 @@ class Player:
                 raise ValueError
 
     def still_playing(self):
-        return len(self.hand.cards) > 0
+        return (len(self.hand.cards) > 0) and (self.guessed_correctly)
 
     def hand_over_card(self, card):
         if isinstance(card, Card):            
@@ -98,6 +104,7 @@ class Player:
                 self.hand.add_card(card)
                 self.hand.sort()
             else:
+                self.guessed_correctly = False
                 print(opponent.name + ' says \'' + sample(self.deny_phrases, 1)[0] +'\'')
 
     ### This isn't complete ---------------------------------------------------------
