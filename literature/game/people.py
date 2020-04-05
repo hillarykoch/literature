@@ -100,6 +100,23 @@ class Player:
             else:
                 print(opponent.name + ' says \'' + sample(self.deny_phrases, 1)[0] +'\'')
 
+    ### This isn't complete ---------------------------------------------------------
+    def claim(self, *rng, suit): # rng is required, but kwarg suit is not necessary when rng == "eights_and_jokers"
+        """if someone passes eights_and_jokers, but also a suit,
+            we ignore suit and just go to eights_and_jokers"""
+        if rng[0] == "eights_and_jokers": 
+            # prompts for different ranges might be different
+            print(self.name + " is claiming the Eights and Jokers.")
+        elif suit in ["diamonds", "clubs", "hearts", "spades"]:
+            if rng[0] not in ["low", "high"]:
+                print('If the suit is diamonds, clubs, hearts, or spades, then \'low\' or \'high\' must be specified.')
+                raise ValueError
+            else:
+                print(self.name + " is claiming the " + rng[0] + " " + suit + ".")
+        else:
+            print("You didn't specify a compatible suit and card range.")
+            raise ValueError
+
 
 class Team:
     def __init__(self, team_name, team_number):

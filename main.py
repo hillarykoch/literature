@@ -35,9 +35,6 @@ def main():
     game = Literature(team1, team2)
     game.play_game()
     
-    
-    isinstance(p1.hand, Hand)
-    isinstance(p1.hand, Hand)
 
 # info: https://stackoverflow.com/questions/419163/what-does-if-name-main-do
 if __name__ == "__main__":
