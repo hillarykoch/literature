@@ -51,6 +51,7 @@ class Literature:
             cur_player = self.ordered_players[cur_player_idx][0] # offset 0 is the Player
 
             if cur_player.still_playing():
+                ### Need something that says if current player guessed a card correctly, it is still their turn ###
                 self.take_turn(cur_player)
 
             
