@@ -96,6 +96,7 @@ class Player:
                 print(self.name + ' says \'' + sample(self.proclamations, 1)[0] + '\'')
                 opponent.hand_over_card(card)
                 self.hand.add_card(card)
+                self.hand.sort()
             else:
                 print(opponent.name + ' says \'' + sample(self.deny_phrases, 1)[0] +'\'')
 
