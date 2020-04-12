@@ -13,12 +13,12 @@ def main():
     team2 = Team('City of Townsville Chaos Squad', 2)
     
     p1 = Player('Leela', 1, 1)
-    p2 = Player('Zoidberg', 1, 2, comms=NetworkComms())
+    p2 = Player('Zoidberg', 1, 2)
     p3 = Player('Philip J. Fry', 1, 3)
     
-    p4 = Player('Mojo Jojo', 2, 1, comms=NetworkComms())
+    p4 = Player('Mojo Jojo', 2, 1)
     p5 = Player('Him', 2, 2)
-    p6 = Player('Fuzzy Lumpkins', 2, 3)
+    p6 = Player('Fuzzy Lumpkins', 2, 3, comms=NetworkComms())
     
     team1.add_teammate(p1)
     team1.add_teammate(p2)

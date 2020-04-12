@@ -79,12 +79,8 @@ class Literature:
 
             data = player.comms.get_data(4, choices = choices)
             answer2 = player.comms.parse(data, 4, candidate_cards = candidate_cards)
-            #print(f"\n{player.name} is asking {answer1.name} for the {answer2.get_card_name()}.\n")
 
-            """
-                If the opponent has the card, give it to Player.
-                Otherwise, nothing happens and Player's turn is over.
-            """
+            # If the opponent has the card, give it to Player. Otherwise, nothing happens and Player's turn is over.
             player.ask_for_card(answer1, answer2)
 
 
@@ -105,7 +101,7 @@ class Literature:
             cur_player = self.ordered_players[cur_player_idx][0] # offset 0 is the Player
             cur_player.guessed_correctly = True
 
-            # I didn't test this new "if" condition but the intent is so that a player can keep taking turns
+            # The second part of the "if" condition lets a player take multiple consecutive turns if they guess correctly
             while (cur_player.still_playing()) and (cur_player.guessed_correctly): 
                 self.take_turn(cur_player)
 

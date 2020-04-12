@@ -5,6 +5,7 @@ from examples import custom_style_2, custom_style_3
 from PyInquirer import prompt
 
 from literature.comms.icomms import IComms
+
 from literature.game.global_queries import initialize_move_question
 from literature.game.global_queries import pick_opponent_question
 from literature.game.global_queries import ask_for_card_question
@@ -31,7 +32,7 @@ class ConsoleComms(IComms):
         else:
             return data
 
-    def get_data(self, case, **choices):
+    def get_data(self, case, **kwargs):
         """
             case: getting different data from Player, depending on which step of the game?
             i.e., case = 0: What do you want to do? (claim, ask for card)
@@ -44,13 +45,13 @@ class ConsoleComms(IComms):
             data = prompt(initialize_move_question, style=custom_style_3)
             return data
         elif case == 3:
-            pick_opponent_question[0]["choices"] = choices["choices"]
+            pick_opponent_question[0]["choices"] = kwargs["choices"]
 
             # Which player to ask?
             data = prompt(pick_opponent_question, style=custom_style_2)
             return data
         elif case == 4:
-            ask_for_card_question[0]["choices"] = choices["choices"]
+            ask_for_card_question[0]["choices"] = kwargs["choices"]
 
             # Which card to ask for?
             data = prompt(ask_for_card_question, style=custom_style_2)
