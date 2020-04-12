@@ -1,5 +1,4 @@
 from literature.game.cards import Card, Hand
-
 from literature.comms.console_comms import ConsoleComms 
 
 # external
@@ -96,16 +95,16 @@ class Player:
             print("You can only ask for cards in a range that you possess.")
             raise ValueError
         else:
-            print(self.name + ' asks ' + opponent.name + ', \'Do you have the ' + card.get_card_name() + '?')
+            print('\n' + self.name + ' asks ' + opponent.name + ', \'Do you have the ' + card.get_card_name() + '?\n')
             if opponent.has_card(card):
-                print(opponent.name + ' says \'' + sample(self.hand_over_phrases, 1)[0] + '\'')
-                print(self.name + ' says \'' + sample(self.proclamations, 1)[0] + '\'')
+                print('\n' + opponent.name + ' says \'' + sample(self.hand_over_phrases, 1)[0] + '\'\n')
+                print('\n' + self.name + ' says \'' + sample(self.proclamations, 1)[0] + '\'\n')
                 opponent.hand_over_card(card)
                 self.hand.add_card(card)
                 self.hand.sort()
             else:
                 self.guessed_correctly = False
-                print(opponent.name + ' says \'' + sample(self.deny_phrases, 1)[0] +'\'')
+                print('\n' + opponent.name + ' says \'' + sample(self.deny_phrases, 1)[0] +'\'\n')
 
     ### This isn't complete ---------------------------------------------------------
     def claim(self, *rng, suit): # rng is required, but kwarg suit is not necessary when rng == "eights_and_jokers"

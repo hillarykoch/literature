@@ -104,6 +104,11 @@ class Hand:
                 return True
             else:
                 return False
+    
+    def current_rngs(self):
+        # gives a list of ranges a Player has
+        # so you know what ranges Player can ask for
+        return set([ c.rng + '-' + c.suit for c in self.cards])
 
     # I think this might be a "Player" thing
     def sort(self):

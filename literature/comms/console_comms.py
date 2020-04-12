@@ -7,19 +7,26 @@ from PyInquirer import prompt
 from literature.comms.icomms import IComms
 from literature.game.global_queries import initialize_move_question
 from literature.game.global_queries import pick_opponent_question
+from literature.game.global_queries import ask_for_card_question
 
 class ConsoleComms(IComms):
     def __init__(self):
         pass
 
-    def parse(self, data, case, **opposing_team):
+    def parse(self, data, case, **kwargs):
         if case == 0:
             return data['turn_type'].split()[0].lower() # returns 'ask' and 'claim'
         elif case == 3:
-            for plr in opposing_team['opposing_team'].roster:
-                if data['turn_type'] == plr.name:
+            for plr in kwargs['opposing_team'].roster:
+                if data['player'] == plr.name:
                     return plr
             print("Never found the player you wanted to ask.")
+            raise NameError
+        elif case == 4:
+            for c in kwargs['candidate_cards']:
+                if c.get_card_name() == data['card']:
+                    return c
+            print("Never found the card you wanted to ask for.")
             raise NameError
         else:
             return data
@@ -41,6 +48,12 @@ class ConsoleComms(IComms):
 
             # Which player to ask?
             data = prompt(pick_opponent_question, style=custom_style_2)
+            return data
+        elif case == 4:
+            ask_for_card_question[0]["choices"] = choices["choices"]
+
+            # Which card to ask for?
+            data = prompt(ask_for_card_question, style=custom_style_2)
             return data
         else:
             return self.parse("got this from stdin")

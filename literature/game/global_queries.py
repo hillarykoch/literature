@@ -15,8 +15,17 @@ initialize_move_question = [
 pick_opponent_question = [
     {
         'type': 'list',
-        'name': 'turn_type',
+        'name': 'player',
         'message': 'Who do you want to ask?', 
+        'choices': []
+    }
+]
+
+ask_for_card_question = [
+    {
+        'type': 'list',
+        'name': 'card',
+        'message': 'Which card do you want to ask for?', 
         'choices': []
     }
 ]
