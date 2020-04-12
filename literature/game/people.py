@@ -15,7 +15,7 @@ class Player:
         self.name = name
         self.hand = Hand()
 
-        """ For tracking if a player is still playing.
+        """ For tracking if it is still a Player's turn.
             Set this to True at the start of a turn so that a Player may take multiple guesses.
             Set it to False if the player fails to obtain a card to stop the turn.
         """  
@@ -58,8 +58,8 @@ class Player:
 
         self.position = self.player_number * 2 - 3 + self.team_number
 
-    def get_input(self):
-        return self.comms.get_data()
+#    def get_input(self, case):
+#        return self.comms.get_data()
 
     def change_player_number(self, new_number):
             if new_number in [1, 2, 3]:
@@ -70,7 +70,7 @@ class Player:
                 raise ValueError
 
     def still_playing(self):
-        return (len(self.hand.cards) > 0) and (self.guessed_correctly)
+        return (len(self.hand.cards) > 0)
 
     def hand_over_card(self, card):
         if isinstance(card, Card):            
