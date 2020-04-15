@@ -1,8 +1,11 @@
 # external
+from pprint import pprint
 # Can learn to creates styles using module prompt_toolkil
 #   See: https://python-prompt-toolkit.readthedocs.io/en/master/pages/advanced_topics/styling.html
 from examples import custom_style_2, custom_style_3
-from PyInquirer import prompt
+from PyInquirer import prompt, Separator
+
+from copy import copy
 
 from literature.comms.icomms import IComms
 
@@ -10,6 +13,8 @@ from literature.game.global_queries import initialize_move_question
 from literature.game.global_queries import pick_opponent_question
 from literature.game.global_queries import ask_for_card_question
 from literature.game.global_queries import which_range_to_claim_question
+from literature.game.global_queries import which_teammate_has_which_cards_question
+from literature.game.cards import Card
 
 class ConsoleComms(IComms):
     def __init__(self):
@@ -21,7 +26,7 @@ class ConsoleComms(IComms):
         elif case == 1:
             # return the range and the suit
             if data['range'] == "Eights and Jokers":
-                return [ "eights_and_jokers"]
+                return ["eights_and_jokers"]
             else:
                 return [ x.lower() for x in data['range'].split(" ") ]
         elif case == 3:
@@ -51,21 +56,37 @@ class ConsoleComms(IComms):
         if case == 0:
             data = prompt(initialize_move_question, style=custom_style_3)
             return data
+
         elif case == 1:
+
             data = prompt(which_range_to_claim_question, style=custom_style_2)
             return data
+
+        elif case == 2:
+            # Get current list of candidate cards
+            list_of_dicts = [ {'name': i } for i in kwargs['choices']]
+
+            # Append that list of the current teammate we are asking about
+            choices = [ Separator(kwargs['teammate']), *list_of_dicts ]
+
+            which_teammate_has_which_cards_question[0]['choices'] = choices
+            data = prompt(which_teammate_has_which_cards_question, style=custom_style_2)
+            return data
+
         elif case == 3:
-            pick_opponent_question[0]["choices"] = kwargs["choices"]
+            pick_opponent_question[0]['choices'] = kwargs['choices']
 
             # Which player to ask?
             data = prompt(pick_opponent_question, style=custom_style_2)
             return data
+
         elif case == 4:
-            ask_for_card_question[0]["choices"] = kwargs["choices"]
+            ask_for_card_question[0]['choices'] = kwargs['choices']
 
             # Which card to ask for?
             data = prompt(ask_for_card_question, style=custom_style_2)
             return data
+
         else:
             return self.parse("got this from stdin")
 

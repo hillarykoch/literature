@@ -39,7 +39,13 @@ class Literature:
         answer = player.comms.parse(data, 0)
 
         # If Player wants to claim a range
-        if answer == 'claim': 
+        if answer == 'claim':
+            """Keep asking player for more cards and who has them
+                If they are right their team gets a point
+                If they are wrong, then either the deck dies (they had all the cards on their team, but didnt know which players had them)
+                    or the opposing team gets the point
+                Then range can be removed from the deck
+            """
             print(f"\n{player.name} is claiming a range.\n")
 
             # 1 => case 1: "If claim, which suit will you claim"
@@ -49,13 +55,31 @@ class Literature:
 
             # prompt Player to find out which suit they'd like to claim
             # 2 => case2: "Given which range, which players have which cards?"
-            """Keep asking player for more cards and who has them
-                If they are right their team gets a point
-                If they are wrong, then either the deck dies (they had all the cards on their team, but didnt know which players had them)
-                    or the opposing team gets the point
-                Then range can be removed from the deck
-            """
+            cur_team = self.teams[player.team_number - 1]
+            teammates = [ plr.name if plr.still_playing() else None for plr in cur_team.roster ]
+
+            # List all candidate cards in the range to be claimed
+            candidate_cards = []
+            if answer[0] == 'eights_and_jokers':
+                for c in self.deck.cards:
+                    if c.rng == 'eights_and_jokers':
+                        candidate_cards.append(c)
+            else:
+                for c in self.deck.cards:
+                    cur_rng, cur_suit = answer
+                    if c.rng == cur_rng and c.suit == cur_suit:
+                        candidate_cards.append(c)
+
+            ranks = [ c.get_suit_rank() for c in candidate_cards ]
+            vals = [ c.get_value_rank() for c in candidate_cards ]
+            candidate_cards = [ c.get_card_name() for _, _, c in sorted(
+                zip(ranks, vals, candidate_cards), key=lambda x: (x[0], x[1])) ]
+
+            # Loop over all teammates, letting player check off cards that belong to each player
+            for tm in teammates:
+                data = player.comms.get_data(2, teammate=tm, choices=candidate_cards)
             pass
+        
         else: # Player will ask an opponent for cards
             opposing_team = self.teams[player.team_number % 2]
             print(f"\n{player.name} is going to ask for a card from a member of {opposing_team.team_name}.\n")

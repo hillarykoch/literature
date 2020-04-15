@@ -42,3 +42,16 @@ which_range_to_claim_question = [
                         "Low Hearts", "High Hearts"]
     }
 ]
+
+which_teammate_has_which_cards_question = [
+    {
+        'type': 'checkbox',
+        #'type': 'list',
+        'name': 'claimed',
+        'message': 'Select which teammates you believe are holding which cards',
+        'choices': []#,
+        #'validate': lambda answer: 'You can\'t claim that multiple players hold the same card.'\
+        #    if len(answer) == 0 else True
+        #'filter': = function to make it clear player/card combos?
+    }
+]
