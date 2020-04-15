@@ -9,6 +9,7 @@ from literature.comms.icomms import IComms
 from literature.game.global_queries import initialize_move_question
 from literature.game.global_queries import pick_opponent_question
 from literature.game.global_queries import ask_for_card_question
+from literature.game.global_queries import which_range_to_claim_question
 
 class ConsoleComms(IComms):
     def __init__(self):
@@ -17,6 +18,12 @@ class ConsoleComms(IComms):
     def parse(self, data, case, **kwargs):
         if case == 0:
             return data['turn_type'].split()[0].lower() # returns 'ask' and 'claim'
+        elif case == 1:
+            # return the range and the suit
+            if data['range'] == "Eights and Jokers":
+                return [ "eights_and_jokers"]
+            else:
+                return [ x.lower() for x in data['range'].split(" ") ]
         elif case == 3:
             for plr in kwargs['opposing_team'].roster:
                 if data['player'] == plr.name:
@@ -43,6 +50,9 @@ class ConsoleComms(IComms):
         """
         if case == 0:
             data = prompt(initialize_move_question, style=custom_style_3)
+            return data
+        elif case == 1:
+            data = prompt(which_range_to_claim_question, style=custom_style_2)
             return data
         elif case == 3:
             pick_opponent_question[0]["choices"] = kwargs["choices"]

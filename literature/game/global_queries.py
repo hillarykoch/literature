@@ -29,3 +29,16 @@ ask_for_card_question = [
         'choices': []
     }
 ]
+
+which_range_to_claim_question = [
+    {
+        'type': 'list',
+        'name': 'range',
+        'message': 'Which range do you want to claim?', 
+        'choices': ["Eights and Jokers",\
+            "Low Clubs", "High Clubs",\
+                "Low Diamonds", "High Diamonds",\
+                    "Low Spades", "High Spades",\
+                        "Low Hearts", "High Hearts"]
+    }
+]

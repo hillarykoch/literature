@@ -40,7 +40,21 @@ class Literature:
 
         # If Player wants to claim a range
         if answer == 'claim': 
-            print(f"{player.name} is claiming a range.")
+            print(f"\n{player.name} is claiming a range.\n")
+
+            # 1 => case 1: "If claim, which suit will you claim"
+            data = player.comms.get_data(1)
+            print("\n...and that range is the " + data['range'] + ".\n")
+            answer = player.comms.parse(data, 1)
+
+            # prompt Player to find out which suit they'd like to claim
+            # 2 => case2: "Given which range, which players have which cards?"
+            """Keep asking player for more cards and who has them
+                If they are right their team gets a point
+                If they are wrong, then either the deck dies (they had all the cards on their team, but didnt know which players had them)
+                    or the opposing team gets the point
+                Then range can be removed from the deck
+            """
             pass
         else: # Player will ask an opponent for cards
             opposing_team = self.teams[player.team_number % 2]
