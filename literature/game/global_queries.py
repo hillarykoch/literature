@@ -52,6 +52,15 @@ which_teammate_has_which_cards_question = [
         'choices': []#,
         #'validate': lambda answer: 'You can\'t claim that multiple players hold the same card.'\
         #    if len(answer) == 0 else True
-        #'filter': = function to make it clear player/card combos?
+        #'filter': lambda answer: answer if len(answer) > 0 else None
+    }
+]
+
+are_you_sure_question = [
+    {
+        'type': 'confirm',
+        'message': 'Are you sure?',
+        'name': 'sureness',
+        'default': True,
     }
 ]

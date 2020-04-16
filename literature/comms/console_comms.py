@@ -1,5 +1,4 @@
 # external
-from pprint import pprint
 # Can learn to creates styles using module prompt_toolkil
 #   See: https://python-prompt-toolkit.readthedocs.io/en/master/pages/advanced_topics/styling.html
 from examples import custom_style_2, custom_style_3
@@ -14,6 +13,7 @@ from literature.game.global_queries import pick_opponent_question
 from literature.game.global_queries import ask_for_card_question
 from literature.game.global_queries import which_range_to_claim_question
 from literature.game.global_queries import which_teammate_has_which_cards_question
+from literature.game.global_queries import are_you_sure_question
 from literature.game.cards import Card
 
 class ConsoleComms(IComms):
@@ -41,6 +41,8 @@ class ConsoleComms(IComms):
                     return c
             print("Never found the card you wanted to ask for.")
             raise NameError
+        elif case == 5:
+            return data['sureness']
         else:
             return data
 
@@ -64,7 +66,15 @@ class ConsoleComms(IComms):
 
         elif case == 2:
             # Get current list of candidate cards
-            list_of_dicts = [ {'name': i } for i in kwargs['choices']]
+            list_of_dicts = [ {'name': i } for i in kwargs['choices'] ]
+            
+            # if a card has already been selected, disable it in the checkbox list
+            if kwargs.get('selected', None) is not None:
+                for i in range(len(kwargs['choices'])):
+                    print(kwargs['selected'])
+                    if list_of_dicts[i]['name'] in kwargs['selected']:
+                        print(list_of_dicts[i]['name'])
+                        list_of_dicts[i]['disabled'] = 'already claimed'
 
             # Append that list of the current teammate we are asking about
             choices = [ Separator(kwargs['teammate']), *list_of_dicts ]
@@ -85,6 +95,10 @@ class ConsoleComms(IComms):
 
             # Which card to ask for?
             data = prompt(ask_for_card_question, style=custom_style_2)
+            return data
+
+        elif case == 5:
+            data = prompt(are_you_sure_question, style=custom_style_3)
             return data
 
         else:

@@ -56,7 +56,7 @@ class Literature:
             # prompt Player to find out which suit they'd like to claim
             # 2 => case2: "Given which range, which players have which cards?"
             cur_team = self.teams[player.team_number - 1]
-            teammates = [ plr.name if plr.still_playing() else None for plr in cur_team.roster ]
+            teammates = [ plr if plr.still_playing() else None for plr in cur_team.roster ]
 
             # List all candidate cards in the range to be claimed
             candidate_cards = []
@@ -76,10 +76,46 @@ class Literature:
                 zip(ranks, vals, candidate_cards), key=lambda x: (x[0], x[1])) ]
 
             # Loop over all teammates, letting player check off cards that belong to each player
-            for tm in teammates:
-                data = player.comms.get_data(2, teammate=tm, choices=candidate_cards)
+            player_is_sure = False
+            while not player_is_sure:
+                claim_dict = dict()
+                data = dict()
+                selected = []
+
+                for tm in teammates:
+                    # want to show card choices adaptively
+                    if data.get('claimed', None) is not None:
+                        # which cards were already claimed?
+                        selected += data['claimed']
+                        
+                        if len(selected) > 0:
+                            data = player.comms.get_data(2, teammate=tm.name, choices=candidate_cards, selected=selected)
+                        else: 
+                            # nothing has been claimed yet
+                            data = player.comms.get_data(2, teammate=tm.name, choices=candidate_cards)
+
+                    else:
+                        data = player.comms.get_data(2, teammate=tm.name, choices=candidate_cards)
+
+                    claim_dict[tm.name] = data['claimed']
+            
+                print("\nSo then, " + teammates[0].name + " has " +\
+                    ("the " + claim_dict[teammates[0].name][0] + ", " if len(claim_dict[teammates[0].name]) > 0 else "nothing, ") +\
+                    teammates[1].name + " has " +\
+                        ("the " + claim_dict[teammates[1].name][0] + ", " if len(claim_dict[teammates[1].name]) > 0 else "nothing, ") +\
+                        " and " + teammates[2].name + " has " +\
+                            ("the " + claim_dict[teammates[2].name][0] if len(claim_dict[teammates[2].name]) > 0 else "nothing") +\
+                            ".")
+
+                # Ask the player if they're sure. If not, they can redo.
+                sureness = player.comms.get_data(5)
+                player_is_sure = player.comms.parse(sureness, 5)
+                data = dict()
+                selected = []
+
             pass
         
+
         else: # Player will ask an opponent for cards
             opposing_team = self.teams[player.team_number % 2]
             print(f"\n{player.name} is going to ask for a card from a member of {opposing_team.team_name}.\n")
