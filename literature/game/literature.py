@@ -98,14 +98,24 @@ class Literature:
                         data = player.comms.get_data(2, teammate=tm.name, choices=candidate_cards)
 
                     claim_dict[tm.name] = data['claimed']
+
+                if sum([ len(tot_cards) for plr, tot_cards in claim_dict.items() ]) != 6:
+                    print("\nYou need to claim all 6 cards in the range! Try again.\n")
+                    continue
             
-                print("\nSo then, " + teammates[0].name + " has " +\
-                    ("the " + claim_dict[teammates[0].name][0] + ", " if len(claim_dict[teammates[0].name]) > 0 else "nothing, ") +\
-                    teammates[1].name + " has " +\
-                        ("the " + claim_dict[teammates[1].name][0] + ", " if len(claim_dict[teammates[1].name]) > 0 else "nothing, ") +\
-                        " and " + teammates[2].name + " has " +\
-                            ("the " + claim_dict[teammates[2].name][0] if len(claim_dict[teammates[2].name]) > 0 else "nothing") +\
-                            ".")
+                print("\nSo then:\n")
+                
+                for tm in teammates:
+                    print(tm.name + " has:")
+                    if len(claim_dict[tm.name]) > 0:
+                        [ print("\t " +\
+                            claim_dict[tm.name][i])\
+                                for i in range(len(claim_dict[tm.name])) ]
+                        print("\n")
+                    else:
+                        print("\tnothing\n")
+
+
 
                 # Ask the player if they're sure. If not, they can redo.
                 sureness = player.comms.get_data(5)

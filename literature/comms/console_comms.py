@@ -71,9 +71,7 @@ class ConsoleComms(IComms):
             # if a card has already been selected, disable it in the checkbox list
             if kwargs.get('selected', None) is not None:
                 for i in range(len(kwargs['choices'])):
-                    print(kwargs['selected'])
                     if list_of_dicts[i]['name'] in kwargs['selected']:
-                        print(list_of_dicts[i]['name'])
                         list_of_dicts[i]['disabled'] = 'already claimed'
 
             # Append that list of the current teammate we are asking about
