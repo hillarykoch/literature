@@ -33,7 +33,7 @@ class Literature:
 
         return players
 
-    def query_player(self, player):
+    def query_player(self, player, **kwargs):
         # 0 => case 0, "What do you want to do? (claim, ask for card)"
         data = player.comms.get_data(0)
         answer = player.comms.parse(data, 0)
@@ -49,7 +49,7 @@ class Literature:
             print(f"\n{player.name} is claiming a range.\n")
 
             # 1 => case 1: "If claim, which suit will you claim"
-            data = player.comms.get_data(1)
+            data = player.comms.get_data(1, choices=self.deck.current_rngs())
             print("\n...and that range is the " + data['range'] + ".\n")
             answer = player.comms.parse(data, 1)
 
@@ -75,15 +75,16 @@ class Literature:
             candidate_cards = [ c.get_card_name() for _, _, c in sorted(
                 zip(ranks, vals, candidate_cards), key=lambda x: (x[0], x[1])) ]
 
-            # Loop over all teammates, letting player check off cards that belong to each player
+            # While loop is to let player confirm their choice before proceeding
             player_is_sure = False
             while not player_is_sure:
                 claim_dict = dict()
                 data = dict()
                 selected = []
 
+                # Loop over all teammates, letting player check off cards that belong to each player
                 for tm in teammates:
-                    # want to show card choices adaptively
+                    # reveals card choices adaptively, so a player cannot select the same card twice
                     if data.get('claimed', None) is not None:
                         # which cards were already claimed?
                         selected += data['claimed']
@@ -99,10 +100,12 @@ class Literature:
 
                     claim_dict[tm.name] = data['claimed']
 
+                # Enforce all 6 cards being claimed
                 if sum([ len(tot_cards) for plr, tot_cards in claim_dict.items() ]) != 6:
                     print("\nYou need to claim all 6 cards in the range! Try again.\n")
                     continue
             
+                # Restate choices
                 print("\nSo then:\n")
                 
                 for tm in teammates:
@@ -116,13 +119,18 @@ class Literature:
                         print("\tnothing\n")
 
 
-
                 # Ask the player if they're sure. If not, they can redo.
                 sureness = player.comms.get_data(5)
                 player_is_sure = player.comms.parse(sureness, 5)
-                data = dict()
-                selected = []
 
+            if answer[0] == "eights_and_jokers":
+              player.claim(rng=answer[0], teams=self.teams, claim_dict=claim_dict)
+              self.deck.remove_rng(answer[0])
+            else:
+                player.claim(rng=answer[0], suit=answer[1], teams=self.teams, claim_dict=claim_dict)
+                self.deck.remove_rng(answer[0], suit=answer[1])
+
+            # Still need to remove cards from claimed ranges------------------------------------------
             pass
         
 

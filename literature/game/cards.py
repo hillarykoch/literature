@@ -82,15 +82,32 @@ class Hand:
             print('card must be a Card.')
             raise ValueError
 
-    def contains_card(self, card):
-        if isinstance(card, Card):
-            if card.get_card_name() in [c.get_card_name() for c in self.cards]:
+    #def contains_card(self, card):
+    def contains_card(self, **kwargs):
+
+        # If it is a card object
+        if kwargs.get("card", None) is not None:
+            card = kwargs["card"]
+            if isinstance(card, Card):
+                if card.get_card_name() in [ c.get_card_name() for c in self.cards] :
+                    return True
+                else:
+                    return False
+            else:
+                print('card must be a Card.')
+                raise ValueError
+        # If it is the name of a card object
+        elif kwargs.get("card_name", None) is not None:
+            card_name = kwargs["card_name"]
+            if card_name in [ c.get_card_name() for c in self.cards] :
                 return True
             else:
                 return False
         else:
-            print('card must be a Card.')
+            print("You didn't pass a card in the keyword arguments.")
             raise ValueError
+
+
 
     def contains_rng(self, card):
         if card.rng == 'eights_and_jokers':
@@ -146,21 +163,38 @@ class Deck:
         for c in self.cards:
             print(c.get_card_name())
 
+    def current_rngs(self):
+        # Gives a list of current ranges in the deck
+        # so you know which ranges are still left to be claimed
+        rng_set = set([ c.rng + '-' + c.suit for c in self.cards])
+
+        out_rngs = []
+        for pair in rng_set:
+            p = pair.split('-')
+            # Only want to count eights and jokers once
+            if p[0] == "eights_and_jokers" and p[1] == "Big":
+                out_rngs.append("Eights and Jokers")
+            elif p[0] in ["low", "high"]:
+                out_rngs.append(p[0].capitalize() + ' ' + p[1].capitalize())
+        
+        out_rngs.sort()
+        return out_rngs
+
     """ If a range is claimed, perhaps we should remove it from the deck?
     That way, deck.show() would only show cards that are still in play"""
 
-    def remove_rng(self, *rng, suit): # suit is an optional kwarg
+    def remove_rng(self, *rng, **kwargs): # suit is an optional kwarg
         if rng[0] == "eights_and_jokers":
             self.cards = [c for c in self.cards if not c.rng ==
                           "eights_and_jokers"]
-        elif suit in ["diamonds", "clubs", "hearts", "spades"]:
+        elif kwargs["suit"] in ["diamonds", "clubs", "hearts", "spades"]:
             if rng[0] not in ["low", "high"]:
                 print(
                     'If the suit is diamonds, clubs, hearts, or spades, then \'low\' or \'high\' must be specified.')
                 raise ValueError
             else:
                 self.cards = [c for c in self.cards if not (
-                    c.rng == rng[0] and c.suit == suit)]
+                    c.rng == rng[0] and c.suit == kwargs["suit"])]
         else:
             print("You didn't specify a compatible suit and card range.")
             raise ValueError

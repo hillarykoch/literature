@@ -60,7 +60,7 @@ class ConsoleComms(IComms):
             return data
 
         elif case == 1:
-
+            which_range_to_claim_question[0]["choices"] = kwargs["choices"]
             data = prompt(which_range_to_claim_question, style=custom_style_2)
             return data
 

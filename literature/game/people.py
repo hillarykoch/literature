@@ -79,7 +79,7 @@ class Player:
             raise ValueError
 
     def has_card(self, card):
-        return self.hand.contains_card(card)
+        return self.hand.contains_card(card=card)
         
     def has_rng(self, card):
         return self.hand.contains_rng(card)
@@ -107,21 +107,57 @@ class Player:
                 print('\n' + opponent.name + ' says \'' + sample(self.deny_phrases, 1)[0] +'\'\n')
 
     ### This isn't complete ---------------------------------------------------------
-    def claim(self, *rng, suit): # rng is required, but kwarg suit is not necessary when rng == "eights_and_jokers"
+    def claim(self, **kwargs): # rng, suit, claim_dict
         """if someone passes eights_and_jokers, but also a suit,
             we ignore suit and just go to eights_and_jokers"""
-        if rng[0] == "eights_and_jokers": 
+        if kwargs["rng"] == "eights_and_jokers": 
             # prompts for different ranges might be different
             print(self.name + " is claiming the Eights and Jokers.")
-        elif suit in ["diamonds", "clubs", "hearts", "spades"]:
-            if rng[0] not in ["low", "high"]:
+        elif kwargs["suit"] in ["diamonds", "clubs", "hearts", "spades"]:
+            if kwargs["rng"] not in ["low", "high"]:
                 print('If the suit is diamonds, clubs, hearts, or spades, then \'low\' or \'high\' must be specified.')
                 raise ValueError
             else:
-                print(self.name + " is claiming the " + rng[0] + " " + suit + ".")
+                print(self.name + " is claiming the " + kwargs["rng"] + " " + kwargs["suit"] + ".")
         else:
             print("You didn't specify a compatible suit and card range.")
             raise ValueError
+
+        # grab current team, opposing team
+        cur_team = kwargs["teams"][self.team_number - 1]
+        opp_team = kwargs["teams"][self.team_number % 2]
+
+        # Now, check to see if Player guessed correctly------------------
+        
+        # tracks number of correctly claimed cards. Needs to reach 6
+        claimed_correctly = 0
+
+        # Track number of claimed cards that belong to the other team
+        claimed_but_with_opponents = 0
+
+        # For each player on the team
+        for plr, c in kwargs["claim_dict"].items():
+            # If the player supposedly has any cards
+            if len(c) > 0:
+                for tm in cur_team.roster:
+                    # Find the current player
+                    if tm.name == plr:
+                        # find the card
+                        if tm.hand.contains_card(card_name=c):
+                            claimed_correctly += 1
+
+                        # If the claim was wrong, find out if that card is in the hands of an opposing teammate
+                        elif any([ plr.hand.contains_card(card_name = c) for plr in opp_team.roster ]):
+                            claimed_but_with_opponents += 1
+
+        # Need to update the score accordingly, based on these results
+        # Need to remove claimed cards from deck and hands
+                        
+        pass
+                            
+
+
+
 
 
 class Team:
