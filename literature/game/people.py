@@ -112,13 +112,13 @@ class Player:
             we ignore suit and just go to eights_and_jokers"""
         if kwargs["rng"] == "eights_and_jokers": 
             # prompts for different ranges might be different
-            print(self.name + " is claiming the Eights and Jokers.")
+            print(self.name + " is claiming the Eights and Jokers.\n")
         elif kwargs["suit"] in ["diamonds", "clubs", "hearts", "spades"]:
             if kwargs["rng"] not in ["low", "high"]:
                 print('If the suit is diamonds, clubs, hearts, or spades, then \'low\' or \'high\' must be specified.')
                 raise ValueError
             else:
-                print(self.name + " is claiming the " + kwargs["rng"] + " " + kwargs["suit"] + ".")
+                print(self.name + " is claiming the " + kwargs["rng"] + " " + kwargs["suit"] + ".\n")
         else:
             print("You didn't specify a compatible suit and card range.")
             raise ValueError
@@ -155,18 +155,20 @@ class Player:
 
         # Need to update the score accordingly, based on these results
         if claimed_correctly == 6:
+            print(f"{self.name} got it right!\n")
             return "correct"
         elif claimed_correctly < 6 and claimed_but_with_opponents > 0:
-
+            print(f"{self.name} goofed super hard -- the opposing team had some of the range.\n")
             # end player's turn
             self.guessed_correctly = False
 
             return "incorrect"
         else:
+            print(f"{self.name} got it wrong. The range dies.\n")
 
             # end player's turn
             self.guessed_correctly = False
-            
+
             return "dead"
             
                             

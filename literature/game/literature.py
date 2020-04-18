@@ -38,12 +38,27 @@ class Literature:
         return players
 
     def query_player(self, player, **kwargs):
-        # 0 => case 0, "What do you want to do? (claim, ask for card)"
+        # 0 => case 0, "What do you want to do?"
+        # (claim, ask for card, see your hand, see available ranges)"
         data = player.comms.get_data(0)
         answer = player.comms.parse(data, 0)
 
+        if answer == 'see':
+
+            print("\n")
+            player.hand.show()
+            print("\n")
+
+        elif answer == 'check':
+            cur_rngs = self.deck.current_rngs()
+
+            print("\n")
+            for r in cur_rngs:
+                print(r)
+            print("\n")
+
         # If Player wants to claim a range
-        if answer == 'claim':
+        elif answer == 'claim':
             """Keep asking player for more cards and who has them
                 If they are right their team gets a point
                 If they are wrong, then either the deck dies (they had all the cards on their team, but didnt know which players had them)
@@ -199,9 +214,9 @@ class Literature:
 
 
     def take_turn(self, player):
-        print(f"{player.name}'s turn")
+        print(f"{player.name}'s turn\n")
 
-        print("\tAsking player what they want to do")
+        #print("\tAsking player what they want to do")
         self.query_player(player)
 
         #print(f"\tGetting input: {player.get_input()}")
