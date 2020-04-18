@@ -36,6 +36,7 @@ which_range_to_claim_question = [
         'name': 'range',
         'message': 'Which range do you want to claim?', 
         'choices': []
+    }
 ]
 
 which_teammate_has_which_cards_question = [

@@ -18,8 +18,8 @@ def main():
     
     p4 = Player('Mojo Jojo', 2, 1)
     p5 = Player('Him', 2, 2)
-    p6 = Player('Fuzzy Lumpkins', 2, 3, comms=NetworkComms())
-    
+    p6 = Player('Fuzzy Lumpkins', 2, 3, comms=ConsoleComms())
+
     team1.add_teammate(p1)
     team1.add_teammate(p2)
     team1.add_teammate(p3)
@@ -39,3 +39,4 @@ def main():
 # info: https://stackoverflow.com/questions/419163/what-does-if-name-main-do
 if __name__ == "__main__":
     main()
+

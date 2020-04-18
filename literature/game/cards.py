@@ -82,7 +82,6 @@ class Hand:
             print('card must be a Card.')
             raise ValueError
 
-    #def contains_card(self, card):
     def contains_card(self, **kwargs):
 
         # If it is a card object
@@ -108,7 +107,6 @@ class Hand:
             raise ValueError
 
 
-
     def contains_rng(self, card):
         if card.rng == 'eights_and_jokers':
             if 'eights_and_jokers' in [c.rng for c in self.cards]:
@@ -126,6 +124,17 @@ class Hand:
         # gives a list of ranges a Player has
         # so you know what ranges Player can ask for
         return set([ c.rng + '-' + c.suit for c in self.cards])
+
+    def remove_rng(self, **kwargs):
+        # remove any card that belongs to a specified rng/suit from the Hand
+        if kwargs["rng"] == "eights_and_jokers":
+            for c in self.cards:
+                if c.rng == "eights_and_jokers":
+                    self.remove_card(c)
+        else:
+            for c in self.cards:
+                if c.rng == kwargs["rng"] and c.suit == kwargs["suit"]:
+                    self.remove_card(c)
 
     # I think this might be a "Player" thing
     def sort(self):

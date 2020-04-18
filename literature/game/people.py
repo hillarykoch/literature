@@ -106,7 +106,7 @@ class Player:
                 self.guessed_correctly = False
                 print('\n' + opponent.name + ' says \'' + sample(self.deny_phrases, 1)[0] +'\'\n')
 
-    ### This isn't complete ---------------------------------------------------------
+
     def claim(self, **kwargs): # rng, suit, claim_dict
         """if someone passes eights_and_jokers, but also a suit,
             we ignore suit and just go to eights_and_jokers"""
@@ -140,24 +140,36 @@ class Player:
             # If the player supposedly has any cards
             if len(c) > 0:
                 for tm in cur_team.roster:
+
                     # Find the current player
                     if tm.name == plr:
-                        # find the card
-                        if tm.hand.contains_card(card_name=c):
-                            claimed_correctly += 1
 
-                        # If the claim was wrong, find out if that card is in the hands of an opposing teammate
-                        elif any([ plr.hand.contains_card(card_name = c) for plr in opp_team.roster ]):
-                            claimed_but_with_opponents += 1
+                        for cc in c:
+                            # find the card
+                            if tm.hand.contains_card(card_name=cc):
+                                claimed_correctly += 1
+
+                            # If the claim was wrong, find out if that card is in the hands of an opposing teammate
+                            elif any([ plr.hand.contains_card(card_name = cc) for plr in opp_team.roster ]):
+                                claimed_but_with_opponents += 1
 
         # Need to update the score accordingly, based on these results
-        # Need to remove claimed cards from deck and hands
-                        
-        pass
+        if claimed_correctly == 6:
+            return "correct"
+        elif claimed_correctly < 6 and claimed_but_with_opponents > 0:
+
+            # end player's turn
+            self.guessed_correctly = False
+
+            return "incorrect"
+        else:
+
+            # end player's turn
+            self.guessed_correctly = False
+            
+            return "dead"
+            
                             
-
-
-
 
 
 class Team:

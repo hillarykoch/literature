@@ -12,6 +12,10 @@ class Literature:
         self.teams = [team1, team2] 
         self.ordered_players = self.order_players()
 
+        # scorekeeping
+        self.score = [0, 0]
+        self.dead_rngs = 0
+
         self.deal()
 
     def deal(self):
@@ -124,14 +128,32 @@ class Literature:
                 player_is_sure = player.comms.parse(sureness, 5)
 
             if answer[0] == "eights_and_jokers":
-              player.claim(rng=answer[0], teams=self.teams, claim_dict=claim_dict)
-              self.deck.remove_rng(answer[0])
+                claim_outcome = player.claim(rng=answer[0], teams=self.teams, claim_dict=claim_dict)
+                self.deck.remove_rng(answer[0])
+
+                # Remove cards from claimed ranges
+                [ plr.hand.remove_rng(rng = answer[0]) for tm in self.teams for plr in tm.roster ]
             else:
-                player.claim(rng=answer[0], suit=answer[1], teams=self.teams, claim_dict=claim_dict)
+                claim_outcome = player.claim(rng=answer[0], suit=answer[1], teams=self.teams, claim_dict=claim_dict)
                 self.deck.remove_rng(answer[0], suit=answer[1])
 
-            # Still need to remove cards from claimed ranges------------------------------------------
-            pass
+                # Remove cards from claimed ranges
+                [ plr.hand.remove_rng(rng = answer[0], suit = answer[1]) for tm in self.teams for plr in tm.roster ]
+            
+            if claim_outcome == "dead":
+                self.dead_rngs += 1
+            elif claim_outcome == "correct":
+                print(self.score)
+                print(self.teams)
+                print(player.team_number)
+                self.score[player.team_number - 1] += 1
+            else:
+                self.score[player.team_number % 2] += 1
+
+            print("The current score is:\n")
+            print(f"\t{self.teams[0].team_name}: {self.score[0]}\n")
+            print(f"\t{self.teams[1].team_name}: {self.score[1]}\n")
+            print(f"\nThere are currently {self.dead_rngs} dead ranges.\n")
         
 
         else: # Player will ask an opponent for cards
@@ -201,8 +223,17 @@ class Literature:
             cur_player_idx = (cur_player_idx + 1) % Literature.NUM_PLAYERS
 
             # gotta add the end-game still_playing = 0 somewhere
-            # until then, just slow down the text with this
-            #input()
+            if len(self.deck.cards) == 0:
+                still_playing = 0
+
+                # Report the winner, or a tie
+                if len(set(self.score)) == 1:
+                    print("The game is over, and the teams tied.")
+                elif self.score[0] > self.score[1]:
+                    print(f"\n{self.teams[0].team_name} beat {self.teams[1].team_name}!\n")
+                else:
+                    print(f"\n{self.teams[1].team_name} beat {self.teams[0].team_name}!\n")
+            
 
 
 ################### HELPERS ####################
