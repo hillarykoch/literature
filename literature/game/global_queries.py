@@ -8,7 +8,11 @@ initialize_move_question = [
         'type': 'list',
         'name': 'turn_type',
         'message': 'What would you like to do?',
-        'choices': ['Ask for a card', 'Claim a range', 'See my hand', 'Check unclaimed ranges']
+        'choices': ['Ask for a card',\
+            'Claim a range',\
+                'See my hand',\
+                    'Check unclaimed ranges',\
+                        'View current score']
     }
 ]
 

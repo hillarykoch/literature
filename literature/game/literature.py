@@ -49,6 +49,11 @@ class Literature:
             player.hand.show()
             print("\n")
 
+        elif answer == 'view':
+            print(f"\n{self.teams[0].team_name}: {self.score[0]}")
+            print(f"{self.teams[1].team_name}: {self.score[1]}")
+            print(f"{self.dead_rngs} dead ranges\n")
+
         elif answer == 'check':
             cur_rngs = self.deck.current_rngs()
 
