@@ -4,8 +4,6 @@
 from examples import custom_style_2, custom_style_3
 from PyInquirer import prompt, Separator
 
-from copy import copy
-
 from literature.comms.icomms import IComms
 
 from literature.game.global_queries import initialize_move_question
