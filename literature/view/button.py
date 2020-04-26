@@ -4,6 +4,8 @@ from pygame.locals import (
     RLEACCEL
 )
 
+from literature.view.global_constants import *
+
 class Button:
     def __init__(self, image_path, BUTTON_WIDTH, BUTTON_HEIGHT):
         self.width = BUTTON_WIDTH

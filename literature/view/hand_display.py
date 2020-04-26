@@ -1,6 +1,6 @@
 import pygame
 from numpy import linspace
-from literature.view.global_specifics import *
+from literature.view.global_constants import *
 
 class Card_display:
     def __init__(self, card):
@@ -33,12 +33,8 @@ class Hand_display:
         self.hand = hand
         self.num_cards = len(self.hand.cards)
 
-        # Spreading the cards out left to right
-        self.FAR_LEFT = 160
-        self.FAR_RIGHT = SCREEN_WIDTH - self.FAR_LEFT - CARD_WIDTH
-
         # Where to draw every card
-        rect_locs = list(linspace(self.FAR_LEFT, self.FAR_RIGHT, self.num_cards, dtype = int))
+        rect_locs = list(linspace(FAR_LEFT, FAR_RIGHT, self.num_cards, dtype = int))
         self.card_displays = [None] * self.num_cards
 
         # Make a display for each card in the hand
