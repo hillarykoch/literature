@@ -13,7 +13,7 @@ from pygame.locals import (
 
 # literature
 from literature.view.global_constants import *
-from literature.view.text_input import TextInput
+from literature.view.my_text_input import Text_box
 
 from literature.game.people import Player, Team
 from literature.game.literature import Literature # should fix this naming
@@ -51,34 +51,36 @@ screen.blit(title, title_rect)
 #--------------------------------------------------------------------------------
 # Add input getter
 # Create TextInput objects from team name and player name
-team_input = TextInput(text_color=(225,225,225), cursor_color=(225,225,225), max_string_length=14)
-name_input = TextInput(text_color=(225,225,225), cursor_color=(225,225,225), max_string_length=14)
-clock = pygame.time.Clock()
+#name_input = Text_box(box_size = (200, 35), box_color = (0,0,0), text_color=(225,225,225), cursor_color=(225,225,225), max_string_length=14)
+#
+## Blit the text surface to the screen
+#name_input.rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+#screen.blit(name_input.surface, name_input.rect)
+#
+#clock = pygame.time.Clock()
 
-# Blit the text surface to the screen
-screen.blit(team_input.get_surface(), (250, 450))
-screen.blit(name_input.get_surface(), (250, 490))
+
 
 # flip the display
 pygame.display.flip()
 
 running = True
 while running:
-    # Did the user click the window close button?
     events = pygame.event.get()
+    name_input.update(events)
 
     for event in events:
         if event.type == pygame.QUIT:
             running = False
 
-    if team_input.update(events):
-        username = team_input.get_text()
-    elif name_input.update(events):
-        username = name_input.get_text()
-    else:
-        # Blit the text surface to the screen
-        screen.blit(team_input.get_surface(), (250, 450))
-        screen.blit(name_input.get_surface(), (250, 490))
+    #screen.blit(name_input.surface, ( (SCREEN_WIDTH - name_input.rect.width) / 2, (SCREEN_HEIGHT - name_input.rect.height) / 2))
+
+#    if name_input.update(events):
+#        username = name_input.get_text()
+#        name_input.clear_text()
+#    else:
+#        # Blit the text surface to the screen
+#        screen.blit(name_input_surface, (name_input_rect.left, name_input_rect.top))
 
     #--------------------------------------------------------------------------------
     # Flip the display
