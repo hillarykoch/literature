@@ -101,6 +101,6 @@ class ConsoleComms(IComms):
             return self.parse("got this from stdin")
 
         # this'll be what it is, but for testing see above
-        # return self.parse(input()) 
+        # return self.parse(input())
     def send_data(self, data):
         return f"sent {data} over stdin"

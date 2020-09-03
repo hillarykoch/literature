@@ -35,17 +35,9 @@ screen.blit(table, (0,0))
 # flip the display
 pygame.display.flip()
 
-# Make font
-GAME_FONT = pygame.freetype.Font("literature/images/fonts/Montserrat-Regular.ttf", 16)
-
-# Deals the cards
-game = Literature(team1, team2)
-
 #--------------------------------------------------------------------------------
-# Draw hand of the current player
-hand_display = Hand_display(player.hand)
-
 # Blit players and the sizes of the their hands
+GAME_FONT = pygame.freetype.Font("literature/images/fonts/Montserrat-Regular.ttf", 16)
 GAME_FONT.render_to(screen, (FAR_LEFT, ask_button.rect.center[1] - 100), game.teams[0].team_name, (150, 150, 150))
 for (i, plr) in enumerate(game.teams[0].roster):
     GAME_FONT.render_to(screen, (FAR_LEFT, ask_button.rect.center[1] + (i+1) * 20 - 100), f"{plr.name}: {len(plr.hand.cards)} cards", (225, 225, 225))
@@ -54,43 +46,39 @@ GAME_FONT.render_to(screen, (FAR_LEFT, ask_button.rect.center[1]), game.teams[1]
 for (i, plr) in enumerate(game.teams[1].roster):
     GAME_FONT.render_to(screen, (FAR_LEFT, ask_button.rect.center[1] + (i+1) * 20), f"{plr.name}: {len(plr.hand.cards)} cards", (225, 225, 225))
 
-
 # Run until the user asks to quit
 running = True
 
-while running:
-    if ask_button.rect.collidepoint(pygame.mouse.get_pos()):
-        screen.blit(ask_button.hover_img, ask_button.rect)
-        screen.blit(claim_button.img, claim_button.rect)
-    elif claim_button.rect.collidepoint(pygame.mouse.get_pos()):
-        screen.blit(ask_button.img, ask_button.rect)
-        screen.blit(claim_button.hover_img, claim_button.rect)
-    else:
-        screen.blit(ask_button.img, ask_button.rect)
-        screen.blit(claim_button.img, claim_button.rect)
+ok_button.deactivate()
+for button in buttons:
+    screen.blit(button.surf, button.rect)
+
+#--------------------------------------------------------------------------------
+# Draw hand of the current player
+cur_player_idx = 0
+still_playing = True
+# cur_player_idx = (cur_player_idx + 1) % Literature.NUM_PLAYERS
+hand_display = Hand_display(game.cur_player.hand)
+game.cur_player.guessed_correctly = True
+
+while (running) and (game.cur_player.still_playing()) and (game.cur_player.guessed_correctly): 
 
     # Blit the hand
     for c in range(hand_display.num_cards):
         t, l = hand_display.card_displays[c].rect.topleft
         screen.blit(card_outline, (t - 1, l - 1))
-        screen.blit(hand_display.card_displays[c].img, hand_display.card_displays[c].rect)
-
-        # This will actually be for ask a card, not for your own hand-----------------------
-#        if hand_display.card_displays[c].rect.collidepoint(pygame.mouse.get_pos()) and \
-#            not hand_display.card_displays[ (c+1) % hand_display.num_cards ].rect.collidepoint(pygame.mouse.get_pos()):
-#            card_copy = copy(hand_display.card_displays[c].img)
-#            fill = card_copy.fill((150, 150, 150), special_flags = BLEND_SUB)
-#            fill.top = hand_display.card_displays[c].rect.top
-#            fill.left = hand_display.card_displays[c].rect.left
-#            screen.blit(card_copy, fill)
-#        else:
-#            screen.blit(hand_display.card_displays[c].img, hand_display.card_displays[c].rect)
-
+        screen.blit(hand_display.card_displays[c].surf, hand_display.card_displays[c].rect)
 
     # Did the user click the window close button?
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        elif event.type == pygame.MOUSEMOTION:
+            for button in buttons:
+                button.update(pygame.mouse.get_pos())
+            
+            hand_display.update(event)
         
         # This block is executed once for each MOUSEBUTTONDOWN event.
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -99,11 +87,17 @@ while running:
                 # `event.pos` is the mouse position.
                 if ask_button.rect.collidepoint(event.pos):
                     finished = ask_display(game, hand_display, GAME_FONT)
+                    
                     if not finished:
                         running = False
                 
                 elif claim_button.rect.collidepoint(event.pos):
                     GAME_FONT.render_to(screen, (FAR_LEFT + 200, ask_button.rect.top - 200), "You clicked the claim button!!!", (150, 150, 150))
+
+    #--------------------------------------------------------------------------------
+    # Blit all the sprites
+    for entity in all_sprites:
+        screen.blit(entity.surf, entity.rect)
 
     #--------------------------------------------------------------------------------
     # Flip the display

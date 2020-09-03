@@ -1,5 +1,6 @@
 from literature.game.cards import Card, Hand
-from literature.comms.console_comms import ConsoleComms 
+from literature.comms.console_comms import ConsoleComms
+from literature.comms.gui_comms import GUIComms
 
 # external
 from random import sample

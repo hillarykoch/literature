@@ -11,6 +11,9 @@ class Literature:
 
         self.teams = [team1, team2] 
         self.ordered_players = self.order_players()
+        
+        # initialize the current player -- for GUI version
+        self.cur_player = self.ordered_players[0][0]
 
         # scorekeeping
         self.score = [0, 0]
@@ -242,7 +245,32 @@ class Literature:
             
             cur_player_idx = (cur_player_idx + 1) % Literature.NUM_PLAYERS
 
-            # gotta add the end-game still_playing = 0 somewhere
+            if len(self.deck.cards) == 0:
+                still_playing = 0
+
+                # Report the winner, or a tie
+                if len(set(self.score)) == 1:
+                    print("The game is over, and the teams tied.")
+                elif self.score[0] > self.score[1]:
+                    print(f"\n{self.teams[0].team_name} beat {self.teams[1].team_name}!\n")
+                else:
+                    print(f"\n{self.teams[1].team_name} beat {self.teams[0].team_name}!\n")
+
+    
+    def play_game_GUI(self, **kwargs):
+        cur_player_idx = kwargs["cur_player_idx"]
+        still_playing = kwargs["still_playing"]
+
+        if still_playing:
+            self.cur_player = self.ordered_players[cur_player_idx][0] # offset 0 is the Player
+            self.cur_player.guessed_correctly = True
+
+            # The second part of the "if" condition lets a player take multiple consecutive turns if they guess correctly
+            while (self.cur_player.still_playing()) and (self.cur_player.guessed_correctly): 
+                self.take_turn(self.cur_player)
+            
+            #cur_player_idx = (cur_player_idx + 1) % Literature.NUM_PLAYERS
+
             if len(self.deck.cards) == 0:
                 still_playing = 0
 

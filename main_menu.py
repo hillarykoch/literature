@@ -67,7 +67,7 @@ pygame.display.flip()
 running = True
 while running:
     events = pygame.event.get()
-    name_input.update(events)
+    #name_input.update(events)
 
     for event in events:
         if event.type == pygame.QUIT:
@@ -85,7 +85,7 @@ while running:
     #--------------------------------------------------------------------------------
     # Flip the display
     pygame.display.flip()
-    clock.tick(30)
+    #clock.tick(30)
 
 # Done! Time to quit.
 pygame.quit()
