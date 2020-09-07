@@ -91,13 +91,3 @@ class TextButton(pygame.sprite.Sprite):
                         self.surf = self.hoversurf
                     else:
                         self.surf = self.regsurf
-#                elif (event.type == pygame.MOUSEBUTTONDOWN) and (event.button == 1):
-#                    if self.rect.collidepoint(event.pos):
-#                        self.surf = self.hoversurf
-#                        self.selected = True
-#            elif self.selected:
-#                if (event.type == pygame.MOUSEBUTTONDOWN) and (event.button == 1):
-#                    if self.rect.collidepoint(event.pos):
-#                        self.surf = self.regsurf
-#                        self.selected = False
-                    

@@ -10,7 +10,7 @@ from random import sample
 class Player:
     def __init__(self, name, team_number, 
             player_number, 
-            comms = ConsoleComms(),
+            comms = GUIComms(),
             CPU = False):
         self.name = name
         self.hand = Hand()

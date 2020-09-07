@@ -1,5 +1,13 @@
+# pygame
+import pygame
+import pygame.freetype
+
+# literature
 from literature.game.cards import Deck, Hand
 from literature.game.people import Team
+from literature.view.hand_display import Hand_display
+from literature.view.button import Button
+from literature.view.global_constants import *
 
 
 class Literature:
@@ -220,67 +228,141 @@ class Literature:
             # If the opponent has the card, give it to Player. Otherwise, nothing happens and Player's turn is over.
             player.ask_for_card(answer1, answer2)
 
+    def query_player_GUI(self, player, **kwargs):
+        hand_display = kwargs["hand_display"]
+        GAME_FONT = kwargs["GAME_FONT"]
+        ask_button = kwargs["ask_button"]
+        claim_button = kwargs["claim_button"]
+        ok_button = kwargs["ok_button"]
+        buttons = kwargs["buttons"]
+        all_sprites = kwargs["all_sprites"]
+        
+        answer = player.comms.get_data(1, hand_display = hand_display, all_sprites = all_sprites, ask_button = ask_button, claim_button = claim_button, ok_button = ok_button, buttons = buttons)
 
-    def take_turn(self, player):
+        if answer == 'ask':
+            answer1, answer2 = player.comms.get_data(2, game = self, hand_display = hand_display, GAME_FONT = GAME_FONT,\
+                ask_button = ask_button, claim_button = claim_button, ok_button = ok_button, \
+                    buttons = buttons, all_sprites = all_sprites)
+
+            opposing_team = self.teams[self.cur_player.team_number % 2]
+
+            print(f"\n{player.name} is going to ask for a card from a member of {opposing_team.team_name}.\n")
+            print(f"\n...and that player is {answer1.name}.\n")
+
+            # If the opponent has the card, give it to Player. Otherwise, nothing happens and Player's turn is over.
+            player.ask_for_card(answer1, answer2)
+        
+        elif answer == 'claim':
+            GAME_FONT.render_to(screen, (FAR_LEFT + 200, ask_button.rect.top - 200), "You clicked the claim button!!!", (150, 150, 150))
+
+
+    def take_turn(self, player, GUI=False, **kwargs):
         print(f"{player.name}'s turn\n")
 
-        #print("\tAsking player what they want to do")
-        self.query_player(player)
+        if not GUI:
+            self.query_player(player)
+        else:
+            self.query_player_GUI(player, hand_display = kwargs["hand_display"], GAME_FONT = kwargs["GAME_FONT"], \
+                ask_button = kwargs["ask_button"], claim_button = kwargs["claim_button"], ok_button = kwargs["ok_button"], \
+                    buttons = kwargs["buttons"],  all_sprites = kwargs["all_sprites"])
 
-        #print(f"\tGetting input: {player.get_input()}")
 
+    def play_game(self, GUI=False, **kwargs):
+        if not GUI:
+            cur_player_idx = 0 
+            still_playing = 1
 
-    def play_game(self):
-        cur_player_idx = 0 
-        still_playing = 1
+            while(still_playing):
+                cur_player = self.ordered_players[cur_player_idx][0] # offset 0 is the Player
+                cur_player.guessed_correctly = True
 
-        while(still_playing):
-            cur_player = self.ordered_players[cur_player_idx][0] # offset 0 is the Player
-            cur_player.guessed_correctly = True
+                # The second part of the "if" condition lets a player take multiple consecutive turns if they guess correctly
+                while (cur_player.still_playing()) and (cur_player.guessed_correctly): 
+                    self.take_turn(cur_player)
 
-            # The second part of the "if" condition lets a player take multiple consecutive turns if they guess correctly
-            while (cur_player.still_playing()) and (cur_player.guessed_correctly): 
-                self.take_turn(cur_player)
+                
+                cur_player_idx = (cur_player_idx + 1) % Literature.NUM_PLAYERS
 
+                if len(self.deck.cards) == 0:
+                    still_playing = 0
+
+                    # Report the winner, or a tie
+                    if len(set(self.score)) == 1:
+                        print("The game is over, and the teams tied.")
+                    elif self.score[0] > self.score[1]:
+                        print(f"\n{self.teams[0].team_name} beat {self.teams[1].team_name}!\n")
+                    else:
+                        print(f"\n{self.teams[1].team_name} beat {self.teams[0].team_name}!\n")
+        else:
+            GAME_FONT = kwargs["GAME_FONT"]
+            ask_button = kwargs["ask_button"]
+            claim_button = kwargs["claim_button"]
+            ok_button = kwargs["ok_button"]
+            buttons = kwargs["buttons"]
+            all_sprites = kwargs["all_sprites"]
+
+            # Make black background and draw table
+            screen.fill((0, 0, 0))
+            screen.blit(table, (0,0))
+
+            #--------------------------------------------------------------------------------
+            # Blit players and the sizes of the their hands
+            GAME_FONT.render_to(screen, (FAR_LEFT, ask_button.rect.center[1] - 100), self.teams[0].team_name, (150, 150, 150))
+            for (i, plr) in enumerate(self.teams[0].roster):
+                GAME_FONT.render_to(screen, (FAR_LEFT, ask_button.rect.center[1] + (i+1) * 20 - 100), f"{plr.name}: {len(plr.hand.cards)} cards", (225, 225, 225))
+
+            GAME_FONT.render_to(screen, (FAR_LEFT, ask_button.rect.center[1]), self.teams[1].team_name, (150, 150, 150))
+            for (i, plr) in enumerate(self.teams[1].roster):
+                GAME_FONT.render_to(screen, (FAR_LEFT, ask_button.rect.center[1] + (i+1) * 20), f"{plr.name}: {len(plr.hand.cards)} cards", (225, 225, 225))
+
+            # Run until the user asks to quit
+            running = True
+
+            ok_button.deactivate()
+            for button in buttons:
+                screen.blit(button.surf, button.rect)
+
+            # Flip the display
+            pygame.display.flip()
+
+            #--------------------------------------------------------------------------------
+            # Draw hand of the current player
+            cur_player_idx = 0
+            still_playing = True
             
-            cur_player_idx = (cur_player_idx + 1) % Literature.NUM_PLAYERS
-
-            if len(self.deck.cards) == 0:
-                still_playing = 0
-
-                # Report the winner, or a tie
-                if len(set(self.score)) == 1:
-                    print("The game is over, and the teams tied.")
-                elif self.score[0] > self.score[1]:
-                    print(f"\n{self.teams[0].team_name} beat {self.teams[1].team_name}!\n")
-                else:
-                    print(f"\n{self.teams[1].team_name} beat {self.teams[0].team_name}!\n")
-
-    
-    def play_game_GUI(self, **kwargs):
-        cur_player_idx = kwargs["cur_player_idx"]
-        still_playing = kwargs["still_playing"]
-
-        if still_playing:
-            self.cur_player = self.ordered_players[cur_player_idx][0] # offset 0 is the Player
+            hand_display = Hand_display(self.cur_player.hand)
             self.cur_player.guessed_correctly = True
 
-            # The second part of the "if" condition lets a player take multiple consecutive turns if they guess correctly
-            while (self.cur_player.still_playing()) and (self.cur_player.guessed_correctly): 
-                self.take_turn(self.cur_player)
-            
-            #cur_player_idx = (cur_player_idx + 1) % Literature.NUM_PLAYERS
+            while (running) and (self.cur_player.still_playing()) and (self.cur_player.guessed_correctly):
+                self.take_turn(self.cur_player, GUI=True, hand_display = hand_display, GAME_FONT = GAME_FONT, \
+                    ask_button = ask_button, claim_button = claim_button, ok_button = ok_button, \
+                        buttons = buttons, all_sprites = all_sprites)
 
-            if len(self.deck.cards) == 0:
-                still_playing = 0
-
-                # Report the winner, or a tie
-                if len(set(self.score)) == 1:
-                    print("The game is over, and the teams tied.")
-                elif self.score[0] > self.score[1]:
-                    print(f"\n{self.teams[0].team_name} beat {self.teams[1].team_name}!\n")
-                else:
-                    print(f"\n{self.teams[1].team_name} beat {self.teams[0].team_name}!\n")
+    
+#    def play_game_GUI(self, **kwargs):
+#        cur_player_idx = kwargs["cur_player_idx"]
+#        still_playing = kwargs["still_playing"]
+#
+#        if still_playing:
+#            self.cur_player = self.ordered_players[cur_player_idx][0] # offset 0 is the Player
+#            self.cur_player.guessed_correctly = True
+#
+#            # The second part of the "if" condition lets a player take multiple consecutive turns if they guess correctly
+#            while (self.cur_player.still_playing()) and (self.cur_player.guessed_correctly): 
+#                self.take_turn(self.cur_player, GUI=True)
+#            
+#            #cur_player_idx = (cur_player_idx + 1) % Literature.NUM_PLAYERS
+#
+#            if len(self.deck.cards) == 0:
+#                still_playing = 0
+#
+#                # Report the winner, or a tie
+#                if len(set(self.score)) == 1:
+#                    print("The game is over, and the teams tied.")
+#                elif self.score[0] > self.score[1]:
+#                    print(f"\n{self.teams[0].team_name} beat {self.teams[1].team_name}!\n")
+#                else:
+#                    print(f"\n{self.teams[1].team_name} beat {self.teams[0].team_name}!\n")
             
 
 

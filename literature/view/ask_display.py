@@ -10,9 +10,14 @@ from literature.view.hand_display import Choice_display
 
 #--------------------------------------------------------------------------------
 # Define a display when opponent is selecting cards
-def ask_display(game, hand_display, GAME_FONT):
+def ask_display(game, hand_display, GAME_FONT, **kwargs):
     # Blit the table back to the screen
     screen.blit(table, (0,0))
+
+    ask_button = kwargs["ask_button"]
+    claim_button = kwargs["claim_button"]
+    ok_button = kwargs["ok_button"]
+    buttons = kwargs["buttons"]
 
     # Blit the greyed out buttons
     ok_button.reactivate()
@@ -104,7 +109,7 @@ def ask_display(game, hand_display, GAME_FONT):
                             outplayer = entity.player
                     
                     if (not outplayer is None) and (not outcard is None):
-                        return [outcard, outplayer]
+                        return [outplayer, outcard]
                     else: 
                         outcard = None
                         outplayer = None
