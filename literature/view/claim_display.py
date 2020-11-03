@@ -31,25 +31,23 @@ def claim_display(game, hand_display, GAME_FONT, **kwargs):
     text_buttons = pygame.sprite.Group()
     for (i, plr) in enumerate(game.teams[0].roster):
         buttontxt = f"{plr.name}: {len(plr.hand.cards)} cards"
-        b = TextButton(buttontxt, GAME_FONT, GAME_FONT, (225, 225, 225), (153, 207, 224), plr)
+        b = TextButton(buttontxt, GAME_FONT, GAME_FONT, (225, 225, 225), (153, 207, 224), player=plr)
         b.place((FAR_LEFT, ask_button.rect.center[1]+ (i+1) * 20 - 100))
-        if plr not in opposing_team.roster:
-            b.deactivate()
+        b.deactivate()
         text_buttons.add(b)
 
     for (i, plr) in enumerate(game.teams[1].roster):
         buttontxt = f"{plr.name}: {len(plr.hand.cards)} cards"
-        b = TextButton(buttontxt, GAME_FONT, GAME_FONT, (225, 225, 225), (153, 207, 224), plr)
+        b = TextButton(buttontxt, GAME_FONT, GAME_FONT, (225, 225, 225), (153, 207, 224), player=plr)
         b.place((FAR_LEFT, ask_button.rect.center[1] + (i+1) * 20))
-        if plr not in opposing_team.roster:
-            b.deactivate()
+        b.deactivate()
         text_buttons.add(b)
 
     # Create text buttons for the ranges to claim
     for (i, rng) in enumerate(game.deck.current_rngs()):
         buttontxt = rng
-        b = TextButton(buttontxt, GAME_FONT, GAME_FONT, (225, 225, 225), (153, 207, 224))
-        b.place((ask_button.rect.topleft[0], SCREEN_HEIGHT / 10 + (i+1) * 20))
+        b = TextButton(buttontxt, GAME_FONT, GAME_FONT, (225, 225, 225), (153, 207, 224), rng=rng)
+        b.place((ask_button.rect.topleft[0], SCREEN_HEIGHT / 7 + (i+1) * 20))
         text_buttons.add(b)
 
     text_buttons = TextButtonDisplay(text_buttons)
@@ -86,47 +84,37 @@ def claim_display(game, hand_display, GAME_FONT, **kwargs):
                 for button in buttons:
                     button.update(pygame.mouse.get_pos())
 
-#            elif event.type == pygame.MOUSEBUTTONDOWN:
-#                mouse_pos = pygame.mouse.get_pos()
-#                if (event.button == 1) and ok_button.rect.collidepoint(event.pos):
-#                    
-#                    # check if selected
-#                    for entity in choice_display:
-#                        if entity.selected:
-#                            outcard = entity.card
-#                    for entity in text_buttons.buttons:
-#                        if entity.selected:
-#                            outplayer = entity.player
-#                            
-#                    if ('outplayer' in locals()) and ('outcard' in locals()):
-#                        return [outplayer, outcard]
-#
-#                elif mouse_pos[1] > (ask_button.rect.center[1] - 100):
-#                    text_buttons.button_group_update(event)
-#
-#                else:
-#                    choice_display.update(event)
-#
-#        # Blit the candidate cards
-#        for sprite in choice_display:
-#            t, l = sprite.rect.topleft
-#            screen.blit(card_outline, (t-1, l-1))
-#            screen.blit(sprite.surf, sprite.rect)
-#
-#        # Blit the hand
-#        for c in range(hand_display.num_cards):
-#            t, l = hand_display.card_displays[c].rect.topleft
-#            screen.blit(card_outline, (t - 1, l - 1))
-#            screen.blit(hand_display.card_displays[c].surf, hand_display.card_displays[c].rect)
-#
-#        # Blit buttons
-#        for button in buttons:
-#            screen.blit(button.surf, button.rect)
-#
-#        for button in text_buttons.buttons:
-#            screen.blit(button.surf, button.rect)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                for entity in text_buttons.buttons:
+                    if (event.button == 1) and entity.rect.collidepoint(event.pos):
+                        if hasattr(entity, 'rng'):
+                            entity.selected = True
+                            range_to_claim = entity.rng
+                    
+                if (event.button == 1) and ok_button.rect.collidepoint(event.pos):
+                    if 'range_to_claim' in locals():
+                        print("\n...and that range is the " + data['range'] + ".\n")
+
+                        for b in text_buttons.buttons:
+                            if not b.selected:
+                                b.deactivate()
+
+                        #pass
+
+        # Blit the hand
+        for c in range(hand_display.num_cards):
+            t, l = hand_display.card_displays[c].rect.topleft
+            screen.blit(card_outline, (t - 1, l - 1))
+            screen.blit(hand_display.card_displays[c].surf, hand_display.card_displays[c].rect)
+
+        # Blit buttons
+        for button in buttons:
+            screen.blit(button.surf, button.rect)
+
+        for button in text_buttons.buttons:
+            screen.blit(button.surf, button.rect)
 
         #--------------------------------------------------------------------------------
         # Flip the display
         pygame.display.flip()
-    pass

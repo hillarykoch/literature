@@ -51,7 +51,7 @@ class Button(pygame.sprite.Sprite):
                 self.surf = self.reg_surf
 
 class TextButton(pygame.sprite.Sprite):
-    def __init__(self, txt, font, hoverfont, color, hovercolor, player=None):
+    def __init__(self, txt, font, hoverfont, color, hovercolor, player=None, rng=None):
         super(TextButton, self).__init__()
         self.regsurf, _ = font.render(txt, fgcolor=color)
         self.regrect = self.regsurf.get_rect()
@@ -67,6 +67,9 @@ class TextButton(pygame.sprite.Sprite):
         if player is not None:
             self.player = player
             self.team = self.player.team_number
+
+        if rng is not None:
+            self.rng = rng
         
 
     # Add a mouse hover image
