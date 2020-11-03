@@ -250,6 +250,9 @@ class Literature:
             answer1, answer2 = player.comms.get_data(2, game = self, hand_display = hand_display, GAME_FONT = GAME_FONT,\
                 ask_button = ask_button, claim_button = claim_button, ok_button = ok_button, \
                     buttons = buttons, all_sprites = all_sprites)
+            
+            if answer1 == False:
+                running = False
 
             opposing_team = self.teams[self.cur_player.team_number % 2]
 
@@ -287,10 +290,19 @@ class Literature:
                 print(str(player.name + "'s turn is over"))
                 return
 
-                
-        
+
         elif answer == 'claim':
-            GAME_FONT.render_to(screen, (FAR_LEFT + 200, ask_button.rect.top - 200), "You clicked the claim button!!!", (150, 150, 150))
+            print(f"\n{player.name} is claiming a range.\n")
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+            claim_dict = player.comms.get_data(3, game = self, hand_display = hand_display, GAME_FONT = GAME_FONT,\
+                ask_button = ask_button, claim_button = claim_button, ok_button = ok_button, \
+                    buttons = buttons, all_sprites = all_sprites)
+
+            if claim_dict == False:
+                running = False
 
 
     def take_turn(self, player, GUI=False, **kwargs):

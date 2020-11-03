@@ -5,6 +5,7 @@ import pygame.freetype
 # literature
 from literature.comms.icomms import IComms
 from literature.view.ask_display import ask_display
+from literature.view.claim_display import claim_display
 from literature.view.global_constants import *
 
 class GUIComms(IComms):
@@ -75,6 +76,13 @@ class GUIComms(IComms):
 
             plr, crd = ask_display(game, hand_display, GAME_FONT, ask_button = ask_button, claim_button = claim_button, ok_button  = ok_button, buttons = buttons)
             return [plr, crd]
+
+        elif case == 3:
+            game = kwargs["game"]
+            hand_display = kwargs["hand_display"]
+            GAME_FONT = kwargs["GAME_FONT"]
+            claim_dict = claim_display(game, hand_display, GAME_FONT, ask_button = ask_button, claim_button = claim_button, ok_button  = ok_button, buttons = buttons )
+            return claim_dict
 
     def send_data(self, data):
         return f"sent {data} over network"
