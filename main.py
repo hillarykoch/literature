@@ -16,7 +16,7 @@ import pygame
 import pygame.freetype
 from pygame.locals import *
 
-def main():
+def mmmain():
     # Deals the cards
     game = Literature(team1, team2)
 
@@ -97,5 +97,5 @@ if __name__ == "__main__":
     team2.add_teammate(p6)
     team2.show_roster()
 
-    main()
+    mmmain()
 

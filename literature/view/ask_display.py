@@ -81,6 +81,9 @@ def ask_display(game, hand_display, GAME_FONT, **kwargs):
 
     choice_display = Choice_display(candidate_cards)
 
+    # for debugging, mojo jojo's hand
+    game.ordered_players[1][0].hand.show()
+
     asking = True
     while asking:
         for event in pygame.event.get():
@@ -107,12 +110,9 @@ def ask_display(game, hand_display, GAME_FONT, **kwargs):
                     for entity in text_buttons.buttons:
                         if entity.selected:
                             outplayer = entity.player
-                    
-                    if (not outplayer is None) and (not outcard is None):
+                            
+                    if ('outplayer' in locals()) and ('outcard' in locals()):
                         return [outplayer, outcard]
-                    else: 
-                        outcard = None
-                        outplayer = None
 
                 elif mouse_pos[1] > (ask_button.rect.center[1] - 100):
                     text_buttons.button_group_update(event)

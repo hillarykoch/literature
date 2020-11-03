@@ -6,7 +6,9 @@ import pygame.freetype
 from literature.game.cards import Deck, Hand
 from literature.game.people import Team
 from literature.view.hand_display import Hand_display
+from literature.view.hand_display import Choice_display
 from literature.view.button import Button
+from literature.view.ask_display import ask_display
 from literature.view.global_constants import *
 
 
@@ -229,7 +231,6 @@ class Literature:
             player.ask_for_card(answer1, answer2)
 
     def query_player_GUI(self, player, **kwargs):
-        hand_display = kwargs["hand_display"]
         GAME_FONT = kwargs["GAME_FONT"]
         ask_button = kwargs["ask_button"]
         claim_button = kwargs["claim_button"]
@@ -237,9 +238,15 @@ class Literature:
         buttons = kwargs["buttons"]
         all_sprites = kwargs["all_sprites"]
         
+        hand_display = Hand_display(player.hand)
         answer = player.comms.get_data(1, hand_display = hand_display, all_sprites = all_sprites, ask_button = ask_button, claim_button = claim_button, ok_button = ok_button, buttons = buttons)
 
         if answer == 'ask':
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
             answer1, answer2 = player.comms.get_data(2, game = self, hand_display = hand_display, GAME_FONT = GAME_FONT,\
                 ask_button = ask_button, claim_button = claim_button, ok_button = ok_button, \
                     buttons = buttons, all_sprites = all_sprites)
@@ -251,6 +258,36 @@ class Literature:
 
             # If the opponent has the card, give it to Player. Otherwise, nothing happens and Player's turn is over.
             player.ask_for_card(answer1, answer2)
+
+            if player.guessed_correctly:
+                # update ask_display and hand_display, take_turn again
+                hand_display = Hand_display(player.hand)
+
+                candidate_cards = []
+                for c in self.deck.cards:
+                    for s in self.cur_player.hand.current_rngs():
+                        spl = s.split('-')
+                        cur_rng, cur_suit = spl
+
+                        if cur_rng == 'eights_and_jokers' and cur_rng == c.rng and not self.cur_player.has_card(c):
+                            candidate_cards.append(c)
+                        elif c.rng == cur_rng and c.rng != 'eights_and_jokers' and c.suit == cur_suit and not self.cur_player.has_card(c):
+                            candidate_cards.append(c)
+
+                # sort the list
+                ranks = [c.get_suit_rank() for c in candidate_cards]
+                vals = [c.get_value_rank() for c in candidate_cards]
+
+                candidate_cards = [c for _, _, c in sorted(
+                    zip(ranks, vals, candidate_cards), key=lambda x: (x[0], x[1]))]
+                choice_display = Choice_display(candidate_cards)
+                return
+            else:
+                # end turn, change displays entirely, etc
+                print(str(player.name + "'s turn is over"))
+                return
+
+                
         
         elif answer == 'claim':
             GAME_FONT.render_to(screen, (FAR_LEFT + 200, ask_button.rect.top - 200), "You clicked the claim button!!!", (150, 150, 150))
@@ -262,9 +299,9 @@ class Literature:
         if not GUI:
             self.query_player(player)
         else:
-            self.query_player_GUI(player, hand_display = kwargs["hand_display"], GAME_FONT = kwargs["GAME_FONT"], \
-                ask_button = kwargs["ask_button"], claim_button = kwargs["claim_button"], ok_button = kwargs["ok_button"], \
-                    buttons = kwargs["buttons"],  all_sprites = kwargs["all_sprites"])
+            self.query_player_GUI(player, GAME_FONT = kwargs["GAME_FONT"], \
+                            ask_button = kwargs["ask_button"], claim_button = kwargs["claim_button"], ok_button = kwargs["ok_button"], \
+                                buttons = kwargs["buttons"],  all_sprites = kwargs["all_sprites"])
 
 
     def play_game(self, GUI=False, **kwargs):
@@ -294,6 +331,8 @@ class Literature:
                     else:
                         print(f"\n{self.teams[1].team_name} beat {self.teams[0].team_name}!\n")
         else:
+
+            cur_player_idx = 0
             GAME_FONT = kwargs["GAME_FONT"]
             ask_button = kwargs["ask_button"]
             claim_button = kwargs["claim_button"]
@@ -325,19 +364,23 @@ class Literature:
             # Flip the display
             pygame.display.flip()
 
-            #--------------------------------------------------------------------------------
-            # Draw hand of the current player
-            cur_player_idx = 0
-            still_playing = True
-            
-            hand_display = Hand_display(self.cur_player.hand)
-            self.cur_player.guessed_correctly = True
+            while running:
+                #--------------------------------------------------------------------------------
+                # Draw hand of the current player
+                still_playing = True
+                self.cur_player.guessed_correctly = True
 
-            while (running) and (self.cur_player.still_playing()) and (self.cur_player.guessed_correctly):
-                self.take_turn(self.cur_player, GUI=True, hand_display = hand_display, GAME_FONT = GAME_FONT, \
-                    ask_button = ask_button, claim_button = claim_button, ok_button = ok_button, \
-                        buttons = buttons, all_sprites = all_sprites)
-
+                while (running) and (self.cur_player.still_playing()) and (self.cur_player.guessed_correctly):
+                    self.take_turn(self.cur_player, GUI=True, GAME_FONT = GAME_FONT, \
+                        ask_button = ask_button, claim_button = claim_button, ok_button = ok_button, \
+                            buttons = buttons, all_sprites = all_sprites)
+                    
+                    ask_button.reactivate()
+                    claim_button.reactivate()
+                    pygame.display.flip()
+                
+                cur_player_idx = (cur_player_idx + 1) % Literature.NUM_PLAYERS
+                self.cur_player = self.ordered_players[cur_player_idx][0] # offset 0 is the Player
     
 #    def play_game_GUI(self, **kwargs):
 #        cur_player_idx = kwargs["cur_player_idx"]
